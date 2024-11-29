@@ -1,0 +1,18 @@
+local
+  $(SML_LIB)/basis/basis.mlb
+  basis P = bas prim.sig prim.sml rel.sig rel.sml val.sig end
+  open P
+  fun.sig
+  fun.sml
+  lin.sig
+  lin.sml
+  diff.sig
+  diff.sml
+  exp.sig
+  exp.sml
+in
+  open P           (* provides signatures VAL and PRIM and structure Prim  *)
+  val.sml          (* provides structure Val : VAL *)
+  term_val.sml     (* provides structure TermVal : VAL *)
+  ad.sml           (* provides functor AD (V:VAL) : AD *)
+end
