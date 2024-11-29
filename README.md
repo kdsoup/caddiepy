@@ -1,4 +1,7 @@
-# caddie [![CI](https://github.com/diku-dk/caddie/workflows/CI/badge.svg)](https://github.com/diku-dk/caddie/actions)
+<!-- # caddie [![CI](https://github.com/diku-dk/caddie/workflows/CI/badge.svg)](https://github.com/diku-dk/caddie/actions) -->
+# caddiepy
+
+Combinatory Automatic Differentiation in a Python context.
 
 Combinatory Automatic Differentiation. Much of the code for Caddie is 
 based on the paper [Combinatory Adjoints and Differentiation](https://elsman.com/pdf/msfp22.pdf) [1].
