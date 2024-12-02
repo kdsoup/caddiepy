@@ -20,6 +20,14 @@ structure Prim :> PRIM = struct
         | Exp => "exp"
         | Neg => "~"
         | Pow r => "pow(" ^ real_to_string r ^ ")"
+  fun pp_uprim_py (p: uprim, v: string) =
+      case p of
+          Sin => "sin(" ^ v ^ ")"
+        | Cos => "cos(" ^ v ^ ")"
+        | Ln => "ln(" ^ v ^ ")"
+        | Exp => "exp(" ^ v ^ ")"
+        | Neg => "-" ^ v                                        (*CADDIEPY: neg '~' to '-' for python syntax*)
+        | Pow r => "pow(" ^ v ^ "," ^ real_to_string r ^ ")"    (*CADDIEPY: pow syntax*)
   datatype bilin = Mul     (* : R x R -> R             multiplication *)
                  | Cprod3  (* : R3 x R3 -2> R3         cross product *)
                  | Dprod   (* : RN x RN -2> R          dot product *)

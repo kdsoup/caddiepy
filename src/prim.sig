@@ -2,6 +2,7 @@
 signature PRIM = sig
   datatype uprim = Sin | Cos | Ln | Exp | Pow of real | Neg
   val pp_uprim : uprim -> string
+  val pp_uprim_py : uprim * string -> string          (*CADDIEPY*)
 
   datatype bilin = Mul     (* : R x R -2> R            multiplication *)
                  | Cprod3  (* : R3 x R3 -2> R3         cross product *)

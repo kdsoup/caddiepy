@@ -38,6 +38,12 @@ val add = Add
 val dup = Dup
 val neg = lin("neg",V.uprim Prim.Neg)
 
+
+(* 
+CADDIEPY
+-Pdiff linear expression of diff 
+pretty printing
+*)
 fun pp e =
     case e of
         Add 2 => "(+)"

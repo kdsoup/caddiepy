@@ -1,4 +1,4 @@
-
+(* AST = Abstract Syntax Tree *)
 structure Ast :> AST = struct
 
 fun debug_p () = false
@@ -106,6 +106,10 @@ datatype 'i exp = Real of real * 'i
 fun par p x s =
     if x > p then s else "(" ^ s ^ ")"
 
+(* 
+CADDIEPY
+Affects Typed program: --Ptyped 
+*)
 fun pr_exp (e: 'i exp) : string =
     let fun pr (p:int) (e: 'i exp) : string =
             case e of
