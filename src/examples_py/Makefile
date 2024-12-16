@@ -3,9 +3,11 @@
 
 # ### PYTHON COMPILE TESTS ###
 # Testing if input function differentiates to python output code
-# and if the python output code can compile according to python syntax
+# and if the python output code can compile according to python syntax.
+# If python code comiles using py_compile the .res files will be empty.
+# If there's an error, the error will be written to the .res files.
 
-TESTS=test0 test1
+TESTS=add ba ln num simple smul test0 test1 test2 test3 zero
 
 TESTFILES=$(TESTS:%=%.cad)
 RESFILES=$(TESTFILES:%.cad=%.res)
