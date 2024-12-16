@@ -39,17 +39,22 @@ fun real_to_string r =
        else s
     end
 
+(*  
+CADDIEPY
+--Pdiffu pretty printing
+*)
 fun ppM0 (ind:string) (pp:v->string) (pp0:'a -> string) ((x,bs): 'a M) : string =
     case bs of
-        nil => ind ^ pp0 x
-      | _ => let val bs = List.map (fn (var,v) => ind ^ "let " ^ var ^ " = " ^ pp v) bs
-             in String.concatWith "\n" bs ^ "\n" ^ ind ^ "in " ^ pp0 x
+        nil => ind ^ "return " ^ pp0 x                                                (*CADDIEPY: 'return' statement for single lines *)    
+      | _ => let val bs = List.map (fn (var,v) => ind ^ "" ^ var ^ " = " ^ pp v) bs   (*CADDIEPY: remove 'let' bindings *)
+             in String.concatWith "\n" bs ^ "\n" ^ ind ^ "return " ^ pp0 x            (*CADDIEPY: 'return' replacing 'in' *)
              end
+
 fun pp v =
     case v of
         R r => real_to_string r
-      | T vs => "(" ^ String.concatWith "," (map pp vs) ^ ")"
-      | Uprim(p,v) => Prim.pp_uprim p ^ "(" ^ pp v ^ ")"
+      | T vs => "" ^ String.concatWith "," (map pp vs) ^ ""               (*CADDIEPY: remove paranthesis from tuples in python function input arguments*)
+      | Uprim(p,v) => Prim.pp_uprim_py (p, pp v)                          (*CADDIEPY: new function applying python syntax for pow*)
       | Add(v1,v2) => "(" ^ pp v1 ^ " + " ^ pp v2 ^ ")"
       | Bilin(p,v1,v2) => "(" ^ pp v1 ^ " " ^ Prim.pp_bilin p ^ " " ^ pp v2 ^ ")"
       | Var v => v

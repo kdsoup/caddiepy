@@ -27,6 +27,11 @@ datatype e =
        | Map of var * e * e
        | Red of Rel.r * e
 
+(* 
+CADDIEPY
+Pretty printing in python context
+Internal Expression program: --Pexp
+ *)
 fun pp e =
     case e of
         Var var => var
