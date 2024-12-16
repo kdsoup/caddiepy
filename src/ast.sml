@@ -391,10 +391,15 @@ fun eval (regof:'i -> Region.reg) (E:v env) (e:'i exp) : v =
     in ev E e
     end
 
+(*CADDIEPY parser *)
+
 fun locOfTs nil = Region.botloc
   | locOfTs ((_,(l,_))::_) = l
 
 val kws = ["let", "in", "end", "fun", "map", "iota", "fn", "pow", "red"]
+
+(* Python keywords *)
+(* val kws = ["def", "return", "map", "pow", ]    *)
 
 val p_zero : unit p =
  fn ts =>

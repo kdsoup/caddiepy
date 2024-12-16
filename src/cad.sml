@@ -276,7 +276,7 @@ fun unlinearise prg =
         val pling = if rad_p() then "_diff_reverse" else "_diff"      (* CADDIEPY: pp for diff function markers*)
         val () =
             if print_diff_unlinearised_p() then
-              ( println "Unlinearised differentiated program (python):"
+              ( println "# Unlinearised differentiated program (python):"
               ; List.app (fn (f,arg,d,gM,_) =>
                              ( println ("def " ^ f ^ pling ^ "(" ^ V.pp arg ^ "," ^ V.pp d ^ ")" ^ ":")      (*CADDIEPY: python function declaration: def func(): *)
                              ; println (V.ppM "    " V.pp gM)
