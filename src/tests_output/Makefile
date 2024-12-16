@@ -7,7 +7,7 @@
 # If python code comiles using py_compile the .res files will be empty.
 # If there's an error, the error will be written to the .res files.
 
-TESTS=add ba ln num simple smul test0 test1 test2 test3 zero
+TESTS=add ba ln num simple smul test0 test1 test2 test3 zero mul
 
 TESTFILES=$(TESTS:%=%.cad)
 RESFILES=$(TESTFILES:%.cad=%.res)
@@ -25,7 +25,8 @@ tst:
 
 # Write python files using CaddiePy
 %.py: %.cad ../cad
-	@$(CAD) --Pdiffu $< > $@ 2>&1; echo "done" >> /dev/null
+	@echo "from math import *\n" >> $@
+	@$(CAD) --Pdiffu $< >> $@ 2>&1; echo "done" >> /dev/null
 	@$(CAD) -r --Pdiffu $< >> $@ 2>&1; echo "done" >> /dev/null
 
 # Check that .py files can compile and write result to complog.txt file
