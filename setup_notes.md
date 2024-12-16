@@ -23,4 +23,9 @@ ARM: ```arch -arm64 zsh```
    2. use ```./src/cad --help``` for instructions
 2. To run tests, type command ```make test``` in the caddie folder
 
-### 
+### Compile and run Standard ML program (.sml or .mlb files)
+1. In the terminal navigate to the .sml or .mlb file folder
+2. Compile the program:
+   2.1 MLTON: ```mlton name-of-file.sml``` or ```mlton name-of-file.mlb```
+   2.2 MLKIT: ```mlkit name-of-file.sml``` or ```mlkit name-of-file.mlb```
+3. run the executable file ```./name-of-file``` (mlton) or ```./run``` (mlkit)
