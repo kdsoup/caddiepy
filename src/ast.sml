@@ -396,7 +396,8 @@ fun eval (regof:'i -> Region.reg) (E:v env) (e:'i exp) : v =
 fun locOfTs nil = Region.botloc
   | locOfTs ((_,(l,_))::_) = l
 
-val kws = ["let", "in", "end", "fun", "map", "iota", "fn", "pow", "red"]
+(* val kws = ["let", "in", "end", "fun", "map", "iota", "fn", "pow", "red"] *)
+val kws = ["let", "in", "end", "def", "map", "iota", "fn", "pow", "red"]
 
 (* Python keywords *)
 (* val kws = ["def", "return", "map", "pow", ]    *)
@@ -538,9 +539,15 @@ type 'i prg = (string * string * 'i exp * 'i) list
 
 type rprg = Region.reg prg
 
+(* val rec p_prg : rprg p =
+    fn ts =>
+       (  ((((((p_kw "def" ->> p_var) >>> p_var) >>- p_symb "=") >>> p_e) oor (fn (((f,x),e),r) => [(f,x,e,r)])) ??* p_prg) (op @)
+       ) ts *)
+
+(* PARSE PYTHON INPUT FILE START *)
 val rec p_prg : rprg p =
     fn ts =>
-       (  ((((((p_kw "fun" ->> p_var) >>> p_var) >>- p_symb "=") >>> p_e) oor (fn (((f,x),e),r) => [(f,x,e,r)])) ??* p_prg) (op @)
+       (  ((((((((p_kw "def" ->> p_var) >>- p_symb "(") >>> p_var) >>- p_symb ")") >>- p_symb ":") >>> p_e) oor (fn (((f,x),e),r) => [(f,x,e,r)])) ??* p_prg) (op @)
        ) ts
 
 fun pr_prg (p: 'i prg) : string =
