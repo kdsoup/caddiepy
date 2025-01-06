@@ -44,9 +44,9 @@ structure Prim :> PRIM = struct
   fun pp_bilin_py b v1 v2 =
       case b of
           Mul => v1 ^ "*" ^ v2
-        | Cprod3 => v1 ^ " x " ^ v2
+        | Cprod3 => "cross" ^ "(" ^ v1 ^ "," ^ v2 ^ ")"
         | Dprod => "dot(" ^ v1 ^ "," ^ v2 ^ ")"
-        | Sprod => v1 ^ " . " ^ v2
+        | Sprod => v1 ^ "*" ^ v2
         | Norm2Sq => v1 ^ "**2 + " ^ v2 ^ "**2" 
 
   val mul : real * real -> real = op *

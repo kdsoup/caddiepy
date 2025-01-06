@@ -287,7 +287,7 @@ fun unlinearise prg =
     in prg'
     end
 
-
+(* caddiepy *)
 fun main () =
     let val parseRes = parseEval()
         val compRes = compile parseRes
@@ -296,8 +296,8 @@ fun main () =
         val udiffRes = unlinearise diffRes
     in ()
     end handle Fail msg =>
-               ( println ("** ERROR: " ^ msg)
-               ; println ("** ERROR: Pass the --help option for assistance")
+               ( println ("# ERROR: " ^ msg) (* py syntax comment *)
+               ; println ("# ERROR: Pass the --help option for assistance") (* py syntax comment *)
                ; OS.Process.exit OS.Process.failure
                )
 

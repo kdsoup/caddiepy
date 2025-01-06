@@ -1,4 +1,4 @@
-fun die s = (print ("Error (Lin): " ^ s ^ "\n"); raise Fail s)
+fun die s = (print ("# Error (Lin): " ^ s ^ "\n"); raise Fail s) (* py syntax comment *)
 
 functor Lin(V:VAL) :> LIN where type v = V.v and type 'a M = 'a V.M and type 'a f = 'a V.f = struct
 type v = V.v

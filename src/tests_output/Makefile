@@ -26,7 +26,7 @@ tst:
 # Write python files using CaddiePy
 %.py: %.cad ../cad
 	@echo "from math import *" >> $@
-	@echo "from numpy import dot\n" >> $@
+	@echo "from numpy import dot, cross \n" >> $@
 	@$(CAD) --Pdiffu $< >> $@ 2>&1; echo "done" >> /dev/null
 	@$(CAD) -r --Pdiffu $< >> $@ 2>&1; echo "done" >> /dev/null
 

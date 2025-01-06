@@ -57,11 +57,12 @@ fun pp v =
       | Uprim(p,v) => Prim.pp_uprim_py (p, pp v)                          (*CADDIEPY: new function applying python syntax for pow*)
       | Add(v1,v2) => "(" ^ pp v1 ^ " + " ^ pp v2 ^ ")"
       (* | Bilin(p,v1,v2) => "(" ^ pp v1 ^ " " ^ Prim.pp_bilin p ^ " " ^ pp v2 ^ ")" *)
-      | Bilin(p,v1,v2) => "(" ^ Prim.pp_bilin_py p (pp v1) (pp v2) ^ ")"
+      | Bilin(p,v1,v2) => "(" ^ Prim.pp_bilin_py p (pp v1) (pp v2) ^ ")" (* py *) 
       | Var v => v
       | If(v,m1,m2) => "(if " ^ pp v ^ " then\n" ^ ppM0 "  " pp pp m1 ^ "\nelse\n" ^ ppM0 "  " pp pp m2 ^ ")"
       | Z => "Z"
-      | Prj(i,v) => "prj" ^ Int.toString i ^ "(" ^ pp v ^ ")"
+      (* | Prj(i,v) => "prj" ^ Int.toString i ^ "(" ^ pp v ^ ")" *)
+      | Prj(i,v) => "(" ^ pp v ^ "[" ^ Int.toString (i-1) ^ "]" ^ ")" (* py *)
       | Map(x,f,vs) => "(map (fn " ^ x ^ " => " ^ ppM0 "" pp pp f ^ ") " ^ pp vs ^ ")"
       | Zip (x,fs,vs) => "(zip [" ^ String.concatWith "," (map (fn f => "fn " ^ x ^ " => " ^ pp f) fs) ^ "])"
       | Nth(v,n) => pp v ^ "[" ^ Int.toString n ^ "]"
