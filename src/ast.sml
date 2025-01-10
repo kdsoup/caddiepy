@@ -397,10 +397,7 @@ fun locOfTs nil = Region.botloc
   | locOfTs ((_,(l,_))::_) = l
 
 (* val kws = ["let", "in", "end", "fun", "map", "iota", "fn", "pow", "red"] *)
-val kws = ["let", "in", "end", "def", "map", "iota", "fn", "pow", "red"]
-
-(* Python keywords *)
-(* val kws = ["def", "return", "map", "pow", ]    *)
+val kws_py = ["def", "return", "log", "map", "iota", "pow", "red"]   (* python keywords *)
 
 val p_zero : unit p =
  fn ts =>
@@ -438,7 +435,7 @@ val p_var : string p =
  fn ts =>
     case ts of
         (T.Id k,r)::ts' =>
-        if not (List.exists (fn s => s = k) kws) then OK (k,r,ts')
+        if not (List.exists (fn s => s = k) kws_py) then OK (k,r,ts')
         else NO(locOfTs ts, fn () => "expecting identifier, but found keyword '" ^ k ^ "'")
       | _ => NO(locOfTs ts, fn () => "expecting identifier, but found number or symbol")
 
@@ -473,15 +470,26 @@ and p_e0 : rexp p =
 
 and p_ae : rexp p =
     fn ts =>
-       (    ((p_var >>> p_ae) oor (fn ((v,e),r) => App(v,e,r)))
+       (    ((p_kw "return") ->> p_e)   (*caddiepy*)
+         || ((p_var >>> ((p_symb "=" ->> p_e) >>> (p_symb ";" ->> p_e))) oor (fn ((v,(e1,e2)),r) => Let(v,e1,e2,r)))   (*caddiepy: variable bindings*)
+         
+         (* TODO: parse x[1] porjection indexing *)
+         (* || ((p_var >>> ((p_symb "[" ->> p_int) >>- p_symb "]")) oor (fn ((e,i),r) => Prj(i,e,r))) *)
+         (* || (((p_var ->> p_symb "[") >>> (p_int >>- p_symb "]")) oor (fn ((v,i),r) => Prj(i,v,r))) *)
+
+         || ((p_var >>> p_ae) oor (fn ((v,e),r) => App(v,e,r)))
          || (((p_kw "pow" ->> p_real) >>> p_ae) oor (fn ((f,e),r) => Pow(f,e,r)))
+
+         (* TODO: parse log *)
+         (* || ((((p_kw "log" ->> p_symb "(") ->> p_ae) >>- p_symb ")") oor (fn ((f,e),r) => Log(f,e,r))) *)
+
          || (p_var oor Var)
          || (p_zero oor (fn ((),i) => Zero i))
          || (p_int oor Int)
          || (p_real oor Real)
-         || (((p_symb "#" ->> p_int) >>> p_ae) oor (fn ((i,e),r) => Prj(i,e,r)))
+         (* || (((p_symb "#" ->> p_int) >>> p_ae) oor (fn ((i,e),r) => Prj(i,e,r))) *)
          || ((p_seq "(" ")" p_e) oor (fn ([e],_) => e | (es,r) => Tuple (es,r)))
-         || (((p_kw "let" ->> p_var) >>> ((p_symb "=" ->> p_e) >>> (p_kw "in" ->> p_e)) >>- p_kw "end") oor (fn ((v,(e1,e2)),r) => Let(v,e1,e2,r)))
+         (* || (((p_kw "let" ->> p_var) >>> ((p_symb "=" ->> p_e) >>> (p_kw "in" ->> p_e)) >>- p_kw "end") oor (fn ((v,(e1,e2)),r) => Let(v,e1,e2,r))) *)
          || (((p_kw "map" ->> ((p_symb "("
                               ->> (((p_kw "fn" ->> p_var) >>- p_symb "=>") >>> p_e))
                               >>- p_symb ")")) >>> p_ae)
@@ -538,11 +546,6 @@ fun parse arg = parse0 p_e arg
 type 'i prg = (string * string * 'i exp * 'i) list
 
 type rprg = Region.reg prg
-
-(* val rec p_prg : rprg p =
-    fn ts =>
-       (  ((((((p_kw "def" ->> p_var) >>> p_var) >>- p_symb "=") >>> p_e) oor (fn (((f,x),e),r) => [(f,x,e,r)])) ??* p_prg) (op @)
-       ) ts *)
 
 (* PARSE PYTHON INPUT FILE START *)
 val rec p_prg : rprg p =
@@ -781,6 +784,7 @@ fun info_of_exp (e: 'i exp) : 'i =
       | Red(_,_,i) => i
       | Array(_, i) => i
       | Range(_,_,_,i) => i
+      (* | Log(_,i) => i *)
 
 fun tyinf_exp (TE: ty env) (e:Region.reg exp) : (Region.reg*ty) exp * ty =
     let fun tyinf_svbin opr (e1,e2,r) =
