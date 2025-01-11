@@ -417,6 +417,16 @@ val p_int : int p =
            | _ => NO(locOfTs ts, fn () => "int"))
       | _ => NO(locOfTs ts, fn () => "int")
 
+(* CADDIEPY: make 0-indexing from python to 1-indexing for projection; x[0] = #1 x *)
+val p_index : int p =
+ fn ts =>
+    case ts of
+        (T.Num n,r)::ts' =>
+        (case (Int.fromString n, List.exists (fn c => c = #".") (String.explode n)) of
+             (SOME n, false) => OK (n+1,r,ts')
+           | _ => NO(locOfTs ts, fn () => "int"))
+      | _ => NO(locOfTs ts, fn () => "int")
+
 val p_real : real p =
  fn ts =>
     case ts of
@@ -471,14 +481,23 @@ and p_e0 : rexp p =
        ( (p_ae ??* ((p_bin "*" Mul p_ae) || (p_bin "*>" Smul p_e0))) (fn (e,f) => f e)
        ) ts
 
+(* CADDIEPY: parsing variable for projection *)
+and p_e_prj : rexp p =
+  fn ts =>
+      ( (p_var oor Var)
+      ) ts
+
 and p_ae : rexp p =
     fn ts =>
        (    ((p_kw "return") ->> p_e)   (*caddiepy*)
-         || ((p_var >>> ((p_symb "=" ->> p_e) >>> (p_symb ";" ->> p_e))) oor (fn ((v,(e1,e2)),r) => Let(v,e1,e2,r)))   (*caddiepy: variable bindings*)
+
+         (* CADDIEPY: variable bindings *)
+         || ((p_var >>> ((p_symb "=" ->> p_e) >>> (p_symb ";" ->> p_e))) oor (fn ((v,(e1,e2)),r) => Let(v,e1,e2,r)))  
+         (* || (((p_kw "let" ->> p_var) >>> ((p_symb "=" ->> p_e) >>> (p_kw "in" ->> p_e)) >>- p_kw "end") oor (fn ((v,(e1,e2)),r) => Let(v,e1,e2,r))) *)
          
-         (* TODO: parse x[1] porjection indexing *)
-         (* || ((p_var >>> ((p_symb "[" ->> p_int) >>- p_symb "]")) oor (fn ((e,i),r) => Prj(i,e,r))) *)
-         (* || (((p_var ->> p_symb "[") >>> (p_int >>- p_symb "]")) oor (fn ((v,i),r) => Prj(i,v,r))) *)
+         (* CADDIEPY parse x[1] porjection indexing *)
+         || ((p_e_prj >>> ((p_symb "[" ->> p_index) >>- p_symb "]")) oor (fn ((e,i),r) => Prj(i,e,r)))
+         (* || (((p_symb "#" ->> p_int) >>> p_ae) oor (fn ((i,e),r) => Prj(i,e,r))) *)
 
          || ((p_var >>> p_ae) oor (fn ((v,e),r) => App(v,e,r)))
          || (((p_kw "pow" ->> p_real) >>> p_ae) oor (fn ((f,e),r) => Pow(f,e,r)))
@@ -490,9 +509,7 @@ and p_ae : rexp p =
          || (p_zero oor (fn ((),i) => Zero i))
          || (p_int oor Int)
          || (p_real oor Real)
-         (* || (((p_symb "#" ->> p_int) >>> p_ae) oor (fn ((i,e),r) => Prj(i,e,r))) *)
          || ((p_seq "(" ")" p_e) oor (fn ([e],_) => e | (es,r) => Tuple (es,r)))
-         (* || (((p_kw "let" ->> p_var) >>> ((p_symb "=" ->> p_e) >>> (p_kw "in" ->> p_e)) >>- p_kw "end") oor (fn ((v,(e1,e2)),r) => Let(v,e1,e2,r))) *)
          || (((p_kw "map" ->> ((p_symb "("
                               ->> (((p_kw "fn" ->> p_var) >>- p_symb "=>") >>> p_e))
                               >>- p_symb ")")) >>> p_ae)
@@ -846,6 +863,13 @@ fun tyinf_exp (TE: ty env) (e:Region.reg exp) : (Region.reg*ty) exp * ty =
                val t = tuple_ty (map #2 ets)
            in (Tuple (map #1 ets,(r,t)), t)
            end
+         (* | Prj (i,e1,r) =>
+           let val (e1',ty1) = tyinf_exp TE e1
+               val t = fresh_ty() (* result *)
+               val t' = fresh_ty0 [ElemTy(i,t)]
+           in unify_ty r (ty1, t')
+            ; (Prj(i,e1',(r,t)),t)
+           end *)
          | Prj (i,e1,r) =>
            let val (e1',ty1) = tyinf_exp TE e1
                val t = fresh_ty() (* result *)
