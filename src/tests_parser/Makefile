@@ -4,23 +4,27 @@
 # .py input files and compile to type inference (--Ptyped) and internal expression (--Pexp)
 # Using original makefile test from caddie
 
+# TESTS=test0 test1 test2 test3 simple ba zero num add smul
+TESTS=add num simple1 simple2 simple3
 
-TESTS=test0 test1 test2 test3 simple ba zero num add smul
-
-TESTFILES=$(TESTS:%=%.cad)
-RESFILES=$(TESTFILES:%.cad=%.res)
+TESTFILES=$(TESTS:%=%.py)
+RESFILES=$(TESTFILES:%.py=%.res)
+OUTFILES=$(TESTFILES:%.py=%.out)
 
 CAD?=../cad
 
 .PHONY: all
-all: test
+all: test out
 
 .PHONY: tst
 tst:
 	echo $(RESFILES)
 
-%.out: %.cad ../cad
-	$(CAD) --Ptyped --Pexp $< > $@ 2>&1; echo "done" >> /dev/null
+.PHONY: out
+out: $(OUTFILES)
+
+%.out: %.py ../cad
+	@$(CAD) --Ptyped --Pexp $< > $@ 2>&1; echo "done" >> /dev/null
 
 %.res: %.out %.out.ok
 	@(diff -aq $< $*.out.ok > /dev/null 2>&1; \

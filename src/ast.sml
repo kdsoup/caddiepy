@@ -178,6 +178,9 @@ fun toReal s (v:v) : real =
 fun lift1r s (opr : real -> real) : string * v =
     (s, Fun_v(fn v => Real_v(opr (toReal s v))))
 
+fun lift1r_ln s (opr : real -> real) : string * v =
+    ("ln", Fun_v(fn v => Real_v(opr (toReal "ln" v))))
+
 fun lift_rxr_r s (opr : real * real -> real) : string * v =
     (s, Fun_v(fn (Tuple_v[v1,v2]) =>
                  let val r1 = toReal s v1
@@ -397,7 +400,7 @@ fun locOfTs nil = Region.botloc
   | locOfTs ((_,(l,_))::_) = l
 
 (* val kws = ["let", "in", "end", "fun", "map", "iota", "fn", "pow", "red"] *)
-val kws_py = ["def", "return", "log", "map", "iota", "pow", "red"]   (* python keywords *)
+val kws_py = ["def", "return", "log"]   (* python keywords *)
 
 val p_zero : unit p =
  fn ts =>
@@ -480,8 +483,8 @@ and p_ae : rexp p =
          || ((p_var >>> p_ae) oor (fn ((v,e),r) => App(v,e,r)))
          || (((p_kw "pow" ->> p_real) >>> p_ae) oor (fn ((f,e),r) => Pow(f,e,r)))
 
-         (* TODO: parse log *)
-         (* || ((((p_kw "log" ->> p_symb "(") ->> p_ae) >>- p_symb ")") oor (fn ((f,e),r) => Log(f,e,r))) *)
+         (* CADDIEPY: parse log -> ln *)
+         || ((((p_kw "log" ->> p_symb "(") ->> p_e) >>- p_symb ")") oor (fn (e,r) => App("ln",e,r)))
 
          || (p_var oor Var)
          || (p_zero oor (fn ((),i) => Zero i))
@@ -864,6 +867,11 @@ fun tyinf_exp (TE: ty env) (e:Region.reg exp) : (Region.reg*ty) exp * ty =
            in unify_ty r (ty1,real_ty)
             ; (Pow (f,e1',(r,real_ty)), real_ty)
            end
+         (* | Log (e1,r) =>
+           let val (e1',ty1) = tyinf_exp TE e1
+           in unify_ty r (ty1,real_ty)
+            ; (Log (e1',(r,real_ty)), real_ty)
+           end *)
          | Red (rel,es,r) =>
            let val (es', ty_es) = tyinf_exp TE es
                val (rel', _) = tyinf_rel TE rel
