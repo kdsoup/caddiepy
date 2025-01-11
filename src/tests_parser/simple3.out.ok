@@ -1,0 +1,5 @@
+Typed program:
+ f : (real -> real)
+ f(x) = let x1 = 2 in let x2 = x in (x1+x1*x2)-sin x2 end end
+Internal expression program:
+ f(x) = let x1 = 2 in let x2 = x in ((x1+(x1*x2))+~(sin(x2))) end end

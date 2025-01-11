@@ -1,0 +1,5 @@
+Typed program:
+ f : ((real * real) -> real)
+ f(x) = let x3 = #1 x in x3+#2 x end
+Internal expression program:
+ f(x) = let x3 = #1(x) in (x3+#2(x)) end

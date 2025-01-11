@@ -1,2 +1,0 @@
-
-fun f x = ln ((#1 x) * cos #2 x)
