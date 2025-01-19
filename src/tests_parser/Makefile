@@ -5,7 +5,7 @@
 # Using original makefile test from caddie
 
 # TESTS=test0 test1 test2 test3 simple ba zero num add smul
-TESTS=add num ln simple simple1 simple2 simple3
+TESTS=add num ln simple simple1 simple2 simple3 smul pow
 
 TESTFILES=$(TESTS:%=%.py)
 RESFILES=$(TESTFILES:%.py=%.res)
