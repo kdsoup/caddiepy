@@ -497,6 +497,7 @@ and p_ae : rexp p =
          
          (* CADDIEPY parse x[1] porjection indexing *)
          || ((p_e_prj >>> ((p_symb "[" ->> p_index) >>- p_symb "]")) oor (fn ((e,i),r) => Prj(i,e,r)))
+         (* || ((p_var >>> ((p_symb "[" ->> p_index) >>- p_symb "]")) oor (fn ((v,i),r) => Prj(i,Var(v,r),r))) *)   (* Alternative declaration. *)
          (* || (((p_symb "#" ->> p_int) >>> p_ae) oor (fn ((i,e),r) => Prj(i,e,r))) *)
 
          || ((p_var >>> p_ae) oor (fn ((v,e),r) => App(v,e,r)))
