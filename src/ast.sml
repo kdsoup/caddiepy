@@ -400,7 +400,7 @@ fun locOfTs nil = Region.botloc
   | locOfTs ((_,(l,_))::_) = l
 
 (* val kws = ["let", "in", "end", "fun", "map", "iota", "fn", "pow", "red"] *)
-val kws_py = ["def", "return", "log"]   (* python keywords *)
+val kws_py = ["def", "return", "log", "multiply"]   (* python keywords *)
 
 val p_zero : unit p =
  fn ts =>
@@ -422,10 +422,10 @@ val p_index : int p =
  fn ts =>
     case ts of
         (T.Num n,r)::ts' =>
-        (case (Int.fromString n, List.exists (fn c => c = #".") (String.explode n)) of
+        (case (Int.fromString n, List.exists (fn c => c = #"." orelse c = #"-" ) (String.explode n)) of
              (SOME n, false) => OK (n+1,r,ts')
-           | _ => NO(locOfTs ts, fn () => "int"))
-      | _ => NO(locOfTs ts, fn () => "int")
+           | _ => NO(locOfTs ts, fn () => "non-negative int"))
+      | _ => NO(locOfTs ts, fn () => "non-negative int")
 
 val p_real : real p =
  fn ts =>
@@ -505,6 +505,9 @@ and p_ae : rexp p =
 
          (* CADDIEPY: parse log -> ln *)
          || ((((p_kw "log" ->> p_symb "(") ->> p_e) >>- p_symb ")") oor (fn (e,r) => App("ln",e,r)))
+
+         (* CADDIEPY: Smul *)
+         || (((((p_kw "multiply" ->> p_symb "(") ->> p_ae) >>- p_symb ",") >>> (p_ae >>- p_symb ")")) oor (fn ((e1,e2),r) => Smul(e1,e2,r)))
 
          || (p_var oor Var)
          || (p_zero oor (fn ((),i) => Zero i))
