@@ -400,7 +400,7 @@ fun locOfTs nil = Region.botloc
   | locOfTs ((_,(l,_))::_) = l
 
 (* val kws = ["let", "in", "end", "fun", "map", "iota", "fn", "pow", "red"] *)
-val kws_py = ["def", "return", "log", "multiply"]   (* python keywords *)
+val kws_py = ["def", "return", "log", "multiply", "pow"]   (* python keywords *)
 
 val p_zero : unit p =
  fn ts =>
@@ -476,9 +476,14 @@ val rec p_e : rexp p =
        ( (p_e0 ??* ((p_bin "+" Add p_e0) || (p_bin "-" Sub p_e0))) (fn (e,f) => f e)
        ) ts
 
-and p_e0 : rexp p =
+(* and p_e0 : rexp p =
     fn ts =>
        ( (p_ae ??* ((p_bin "*" Mul p_ae) || (p_bin "*>" Smul p_e0))) (fn (e,f) => f e)
+       ) ts *)
+
+and p_e0 : rexp p =
+    fn ts =>
+       ( (p_ae ??* (p_bin "*" Mul p_ae)) (fn (e,f) => f e)
        ) ts
 
 (* CADDIEPY: parsing variable for projection *)
@@ -501,7 +506,10 @@ and p_ae : rexp p =
          (* || (((p_symb "#" ->> p_int) >>> p_ae) oor (fn ((i,e),r) => Prj(i,e,r))) *)
 
          || ((p_var >>> p_ae) oor (fn ((v,e),r) => App(v,e,r)))
-         || (((p_kw "pow" ->> p_real) >>> p_ae) oor (fn ((f,e),r) => Pow(f,e,r)))
+
+         (* CADDIEPY: pow *)
+         (* || (((p_kw "pow" ->> p_real) >>> p_ae) oor (fn ((f,e),r) => Pow(f,e,r))) *)
+         || (((((p_kw "pow" ->> p_symb "(") ->> p_ae) >>- p_symb ",") >>> (p_real >>- p_symb ")")) oor (fn ((e,f),r) => Pow(f,e,r)))
 
          (* CADDIEPY: parse log -> ln *)
          || ((((p_kw "log" ->> p_symb "(") ->> p_e) >>- p_symb ")") oor (fn (e,r) => App("ln",e,r)))
