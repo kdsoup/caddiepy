@@ -1,0 +1,5 @@
+Typed program:
+ f1 : (real -> real)
+ f1(x) = ln(sin x)
+Internal expression program:
+ f1(x) = ln(sin(x))

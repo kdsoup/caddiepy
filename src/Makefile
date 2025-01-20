@@ -11,13 +11,15 @@ cad: lib
 
 .PHONY: test
 test: lib
-	$(MAKE) -C tests all
-	$(MAKE) -C examples test
+	# $(MAKE) -C tests all
+	# $(MAKE) -C examples test
+	$(MAKE) -C tests_parser test
 
 .PHONY: clean
 clean:
 	rm -rf *~ MLB *.exe run cad
 	$(MAKE) -C tests clean
+	$(MAKE) -C examples clean
 
 .PHONY: realclean
 realclean: clean

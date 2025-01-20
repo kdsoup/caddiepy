@@ -6,7 +6,7 @@ all:
 .PHONY: clean
 clean:
 	rm -f *~
-	$(MAKE) -C src clean
+	$(MAKE) -C src realclean
 
 .PHONY: test
 test:
