@@ -11,7 +11,7 @@ TESTFILES=$(TESTS:%=%.py)
 RESFILES=$(TESTFILES:%.py=%.res)
 OUTFILES=$(TESTFILES:%.py=%.out)
 
-CAD?=../cad
+CAD?=../../cad
 
 .PHONY: all
 all: test out
@@ -23,7 +23,7 @@ tst:
 .PHONY: out
 out: $(OUTFILES)
 
-%.out: %.py ../cad
+%.out: %.py $(CAD)
 	@$(CAD) --Ptyped --Pexp $< > $@ 2>&1; echo "done" >> /dev/null
 
 %.res: %.out %.out.ok
@@ -43,7 +43,7 @@ out: $(OUTFILES)
 .PHONY: test
 test: $(RESFILES)
 	@echo "-------T E S T --- R E P O R T-------"
-	@../cad --version
+	@$(CAD) --version
 	@cat $(RESFILES)
 	@echo "Tests succeeded:   `grep "OK" $(RESFILES) | wc -l` /`grep "Test" $(RESFILES) | wc -l`"
 	@echo "Test errors:       `grep "ERR" $(RESFILES) | wc -l` /`grep "Test" $(RESFILES) | wc -l`"
