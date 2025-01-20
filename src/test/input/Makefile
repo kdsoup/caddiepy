@@ -54,6 +54,10 @@ test: $(RESFILES)
 ../cad:
 	$(MAKE) -C .. cad
 
+.PHONE: cad
+cad: 
+	$(MAKE) -C ../.. cad
+
 .PHONY: clean
 clean:
 	rm -rf *~ *.exe *.res *.out complog.txt
