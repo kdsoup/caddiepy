@@ -10,6 +10,7 @@ signature PRIM = sig
                  | Sprod   (* : R * RN -2> RN          scalar product *)
                  | Norm2Sq (* : R x R -2> R            \(x,y).(x^2+y^2) *)
   val pp_bilin : bilin -> string    (* all to be printed infix *)
+  val pp_bilin_py : bilin -> string -> string -> string   (*CADDIEPY*)
 
   val mul      : real * real -> real
   val cprod3   : real list * real list -> real list
