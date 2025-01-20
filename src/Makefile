@@ -20,7 +20,6 @@ clean:
 	rm -rf *~ MLB *.exe run cad
 	$(MAKE) -C tests clean
 	$(MAKE) -C examples clean
-	$(MAKE) -C tests_parser clean
 
 .PHONY: realclean
 realclean: clean
