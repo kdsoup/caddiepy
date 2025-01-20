@@ -42,9 +42,11 @@ out: $(OUTFILES)
 
 .PHONY: test
 test: $(RESFILES)
-	@echo "-------T E S T --- R E P O R T-------"
+	@echo "--------------I N P U T--------------"
 	@$(CAD) --version
+	@echo ""
 	@cat $(RESFILES)
+	@echo ""
 	@echo "Tests succeeded:   `grep "OK" $(RESFILES) | wc -l` /`grep "Test" $(RESFILES) | wc -l`"
 	@echo "Test errors:       `grep "ERR" $(RESFILES) | wc -l` /`grep "Test" $(RESFILES) | wc -l`"
 	@echo "See complog.txt"
