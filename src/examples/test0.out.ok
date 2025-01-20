@@ -1,5 +1,0 @@
-Typed program:
- f : (real -> real)
- f(x) = 3*x+sin(2*x)
-Internal expression program:
- f(x) = ((3*x)+sin((2*x)))
