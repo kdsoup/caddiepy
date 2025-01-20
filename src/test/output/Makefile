@@ -14,7 +14,7 @@ RESFILES=$(TESTFILES:%.cad=%.res)
 PYFILES=$(TESTFILES:%.cad=%.py)
 LOGFILE = complog.txt
 
-CAD?=../cad
+CAD?=../../cad
 
 .PHONY: all
 all: test
@@ -24,7 +24,7 @@ tst:
 	echo $(RESFILES)
 
 # Write python files using CaddiePy
-%.py: %.cad ../cad
+%.py: %.cad $(CAD)
 	@echo "from math import *" >> $@
 	@echo "from numpy import dot, cross \n" >> $@
 	@$(CAD) --Pdiffu $< >> $@ 2>&1; echo "done" >> /dev/null
@@ -41,8 +41,11 @@ tst:
 
 .PHONY: test
 test: $(PYFILES) $(RESFILES)
-	@echo "-------T E S T --- R E P O R T-------"
-	@../cad --version
+	@echo "------------O U T P U T--------------"
+	@$(CAD) --version
+	@echo ""
+	@cat $(RESFILES)
+	@echo ""
 	@echo "Tests succeeded:   `grep "OK" $(LOGFILE) | wc -l` /`grep "Test" $(LOGFILE) | wc -l`"
 	@echo "Test errors:       `grep "ERR" $(LOGFILE) | wc -l` /`grep "Test" $(LOGFILE) | wc -l`"
 	@echo "See complog.txt"
