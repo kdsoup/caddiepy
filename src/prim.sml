@@ -20,11 +20,12 @@ structure Prim :> PRIM = struct
         | Exp => "exp"
         | Neg => "~"
         | Pow r => "pow(" ^ real_to_string r ^ ")"
+  
   fun pp_uprim_py (p: uprim, v: string) =
       case p of
           Sin => "sin(" ^ v ^ ")"
         | Cos => "cos(" ^ v ^ ")"
-        | Ln => "ln(" ^ v ^ ")"
+        | Ln => "log(" ^ v ^ ")"
         | Exp => "exp(" ^ v ^ ")"
         | Neg => "-" ^ v                                        (*CADDIEPY: neg '~' to '-' for python syntax*)
         | Pow r => "pow(" ^ v ^ "," ^ real_to_string r ^ ")"    (*CADDIEPY: pow syntax*)

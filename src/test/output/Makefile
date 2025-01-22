@@ -2,7 +2,7 @@
 # CADDIEPY
 
 # ### PYTHON COMPILE TESTS ###
-# Testing if python input function differentiates to python output code
+# Testing if python input file differentiates to python output code
 # and if the python output code can compile according to python syntax.
 # If python code comiles using py_compile the .res files will be empty.
 # If there's an error, the error will be written to the .res files.
@@ -22,14 +22,14 @@ all: test
 # tst:
 # 	echo $(RESFILES)
 
-# Write python files using CaddiePy
+# Write python files using Caddiepy with input files from '../input'
 %_out.py: ../input/%.py $(CAD)
 	@echo "from math import *" >> $@
 	@echo "from numpy import dot, cross \n" >> $@
 	@$(CAD) --Pdiffu $< >> $@ 2>&1; echo "done" >> /dev/null
 	@$(CAD) -r --Pdiffu $< >> $@ 2>&1; echo "done" >> /dev/null
 
-# Check that .py files can compile and write result to complog.txt file
+# Check that *_out.py files can compile and write result to complog.txt file
 %_out.res: %_out.py
 	@(python -m py_compile $< > $@ 2>&1; \
 		if [ $$? -eq 0 ]; then \
