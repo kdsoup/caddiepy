@@ -2,16 +2,15 @@
 # CADDIEPY
 
 # ### PYTHON COMPILE TESTS ###
-# Testing if input function differentiates to python output code
+# Testing if python input function differentiates to python output code
 # and if the python output code can compile according to python syntax.
 # If python code comiles using py_compile the .res files will be empty.
 # If there's an error, the error will be written to the .res files.
 
-TESTS=add ba ln num simple smul test0 test1 test2 test3 zero mul dot
+TESTS=add ln num pow simple simple1 simple2 simple3 smul
 
-TESTFILES=$(TESTS:%=%.cad)
-RESFILES=$(TESTFILES:%.cad=%.res)
-PYFILES=$(TESTFILES:%.cad=%.py)
+PYFILES=$(TESTS:%=%_out.py)
+RESFILES=$(TESTS:%=%_out.res)
 LOGFILE = complog.txt
 
 CAD?=../../cad
@@ -19,19 +18,19 @@ CAD?=../../cad
 .PHONY: all
 all: test
 
-.PHONY: tst
-tst:
-	echo $(RESFILES)
+# .PHONY: tst
+# tst:
+# 	echo $(RESFILES)
 
 # Write python files using CaddiePy
-%.py: %.cad $(CAD)
+%_out.py: ../input/%.py $(CAD)
 	@echo "from math import *" >> $@
 	@echo "from numpy import dot, cross \n" >> $@
 	@$(CAD) --Pdiffu $< >> $@ 2>&1; echo "done" >> /dev/null
 	@$(CAD) -r --Pdiffu $< >> $@ 2>&1; echo "done" >> /dev/null
 
 # Check that .py files can compile and write result to complog.txt file
-%.res: %.py
+%_out.res: %_out.py
 	@(python -m py_compile $< > $@ 2>&1; \
 		if [ $$? -eq 0 ]; then \
 			echo "Test $*: OK" >> $(LOGFILE) \
@@ -39,6 +38,7 @@ tst:
 			echo "Test $*: *** ERR: file $< does not compile to python ***" >> $(LOGFILE) \
 		; fi)
 
+# Test results
 .PHONY: test
 test: $(PYFILES) $(RESFILES)
 	@echo "------------O U T P U T--------------"
@@ -52,9 +52,7 @@ test: $(PYFILES) $(RESFILES)
 	@echo "-------------------------------------"
 	@exit `grep "ERR" $(LOGFILE) | wc -l`
 
-../cad:
-	$(MAKE) -C .. cad
-
+# Cleanup files
 .PHONY: clean
 clean:
-	rm -rf *~ *.exe *.res *.out complog.txt *.py *.txt __pycache__
+	rm -rf *~ *.exe *.res complog.txt *.py  __pycache__

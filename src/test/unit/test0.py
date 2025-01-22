@@ -6,7 +6,7 @@ import jax.numpy as jnp
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
-import output.add as add
+import output.add_out as add
 
 def f(x): return jnp.array([x,2]) + jnp.array([2.1,x])
 def g(x): return jnp.array([x,2]) - jnp.array([2.1,x])
