@@ -461,6 +461,14 @@ val p_symb : string -> unit p =
       | (T.Id k,r)::_ => NO(locOfTs ts, fn () => ("symb: found id " ^ k))
       | _ => NO(locOfTs ts, fn () => "symb2")
 
+(* val p_comment : string -> unit p =
+  fn s => fn ts =>
+    case ts of
+        (T.Id k,r)::ts' => OK ((),r,ts')
+        (* if (List.exists (fn c => c = #"\n") (String.explode k)) then OK ((),r,ts')
+        else NO(locOfTs ts, fn () => "expecting comment string '" ^ s "', but found ...")
+      | _ => NO(locOfTs ts, fn () => "expecting comment string") *) *)
+
 infix >>> ->> >>- oo oor || ?? ??*
 
 fun p_seq start finish (p: 'a p) : 'a list p =
@@ -495,6 +503,9 @@ and p_e_prj : rexp p =
 and p_ae : rexp p =
     fn ts =>
        (    ((p_kw "return") ->> p_e)   (*caddiepy*)
+
+         (* CADDIEPY: commments *)
+         || (((p_symb "#" ->> ign p_e) ->> p_symb "\n") ->> p_e)
 
          (* CADDIEPY: variable bindings *)
          || ((p_var >>> ((p_symb "=" ->> p_e) >>> (p_symb ";" ->> p_e))) oor (fn ((v,(e1,e2)),r) => Let(v,e1,e2,r)))  
