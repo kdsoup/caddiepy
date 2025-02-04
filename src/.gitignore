@@ -4,3 +4,4 @@ run
 *~
 cad
 lib
+!lib/github.com/diku-dk/sml-parse/SimpleToken.sml
