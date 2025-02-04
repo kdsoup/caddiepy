@@ -1,4 +1,2 @@
 
-def f(x): return -(x)
-
-def g(x): return -(-(x))
+def f(x): return -x
