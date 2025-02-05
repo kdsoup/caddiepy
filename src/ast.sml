@@ -461,10 +461,42 @@ val p_symb : string -> unit p =
       | (T.Id k,r)::_ => NO(locOfTs ts, fn () => ("symb: found id " ^ k))
       | _ => NO(locOfTs ts, fn () => "symb2")
 
-(* val p_comment : string -> unit p =
+(* val p_comment2 : string -> unit p =
   fn s => fn ts =>
     case ts of
+        (* (T.Id k,r)::ts' => OK ((),r,ts') *)
+        (_,r)::ts' => 
+        if (List.exists (fn c => c = #"\n") (String.explode k)) then OK ((),r,ts')
+        else NO(locOfTs ts, fn () => "expecting comment string '" ^ s "', but found ...")
+      | _ => NO(locOfTs ts, fn () => "expecting comment string") *)
+(* 
+val p_comment3 : unit p =
+  fn ts =>
+    case ts of
         (T.Id k,r)::ts' => OK ((),r,ts')
+        (* (_,r)::ts' =>  *)
+        (* if (List.exists (fn c => c = #"\n") (String.explode k)) then OK ((),r,ts')
+        else NO(locOfTs ts, fn () => "expecting comment string '" ^ s "', but found ...")
+      | _ => NO(locOfTs ts, fn () => "expecting comment string") *)
+
+val p_comment4 : unit p =
+  fn ts =>
+    case ts of
+        (_,r)::ts' => OK ((),r,ts')
+        (* (_,r)::ts' =>  *)
+        (* if (List.exists (fn c => c = #"\n") (String.explode k)) then OK ((),r,ts')
+        else NO(locOfTs ts, fn () => "expecting comment string '" ^ s "', but found ...")
+      | _ => NO(locOfTs ts, fn () => "expecting comment string") *)
+
+val p_comment : string -> unit p =
+  fn s =>
+    val lst = String.explode s
+
+  fn ts =>
+    case ts of
+        (t,r)::ts' => 
+          if t OK ((),r,ts')
+        (* (_,r)::ts' =>  *)
         (* if (List.exists (fn c => c = #"\n") (String.explode k)) then OK ((),r,ts')
         else NO(locOfTs ts, fn () => "expecting comment string '" ^ s "', but found ...")
       | _ => NO(locOfTs ts, fn () => "expecting comment string") *) *)
@@ -505,7 +537,8 @@ and p_ae : rexp p =
        (    ((p_kw "return") ->> p_e)   (*caddiepy*)
 
          (* CADDIEPY: commments *)
-         || (((p_symb "#" ->> ign p_e) ->> p_symb "\n") ->> p_e)
+         (* || (((p_symb "#" ->> p_comment) ->> p_symb "\n") ->> p_e) *)
+         (* || (((p_symb "#" ->> p_comment) ->> p_symb "\n") ->> p_e) *)
 
          (* CADDIEPY: variable bindings *)
          || ((p_var >>> ((p_symb "=" ->> p_e) >>> (p_symb ";" ->> p_e))) oor (fn ((v,(e1,e2)),r) => Let(v,e1,e2,r)))  
@@ -595,6 +628,13 @@ val rec p_prg : rprg p =
     fn ts =>
        (  ((((((((p_kw "def" ->> p_var) >>- p_symb "(") >>> p_var) >>- p_symb ")") >>- p_symb ":") >>> p_e) oor (fn (((f,x),e),r) => [(f,x,e,r)])) ??* p_prg) (op @)
        ) ts
+
+(* val rec p_prg : rprg p =
+    fn ts => (
+            (* CADDIEPY: commments *)
+            (((p_symb "#" ->> p_comment) ->> p_symb "\n") ->> p_prg)
+        ||  ((((((((p_kw "def" ->> p_var) >>- p_symb "(") >>> p_var) >>- p_symb ")") >>- p_symb ":") >>> p_e) oor (fn (((f,x),e),r) => [(f,x,e,r)])) ??* p_prg) (op @)
+      ) ts *)
 
 fun pr_prg (p: 'i prg) : string =
   case p of
