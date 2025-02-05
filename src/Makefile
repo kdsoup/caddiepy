@@ -1,16 +1,15 @@
 
 MLCOMP?=mlkit
-SMLPKG?=smlpkg
 
 .PHONY: all
 all: cad
 
 .PHONY: cad
-cad: lib
+cad:
 	$(MLCOMP) -output $@ cad.mlb
 
 .PHONY: test
-test: lib
+test:
 	@echo "-------T E S T --- R E P O R T-------"
 	@echo ""
 	@$(MAKE) -C test/output
@@ -26,7 +25,5 @@ clean:
 
 .PHONY: realclean
 realclean: clean
-	rm -rf lib
-
-lib: sml.pkg
-	$(SMLPKG) sync
+	rm -rf lib/github.com/diku-dk/sml-parse/MLB
+	rm -rf lib/github.com/diku-dk/sml-uref/MLB

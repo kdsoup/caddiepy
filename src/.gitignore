@@ -3,4 +3,5 @@ run
 *.exe
 *~
 cad
-lib
+lib/github.com/diku-dk/sml-parse/MLB
+lib/github.com/diku-dk/sml-uref/MLB
