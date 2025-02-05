@@ -61,4 +61,4 @@ cad:
 
 .PHONY: clean
 clean:
-	rm -rf *~ *.exe *.res *.out complog.txt
+	rm -rf *~ *.exe *.res *.out complog.txt __pycache__
