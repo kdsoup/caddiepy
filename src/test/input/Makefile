@@ -36,12 +36,13 @@ out: $(OUTFILES)
                 echo "Test $*: *** ERR: file $*.out.ok does not exist ***" > $@ \
              ; fi \
          ; fi)
-	@cat $@
+	@cat $@ > /dev/null
 	@cat $@ >> complog.txt
 
 .PHONY: test
 test: $(RESFILES)
-	@echo "--------------I N P U T--------------"
+	@echo ""
+	@echo "-------------- I N P U T --------------"
 	@$(CAD) --version
 	@echo ""
 	@cat $(RESFILES)
@@ -49,7 +50,7 @@ test: $(RESFILES)
 	@echo "Tests succeeded:   `grep "OK" $(RESFILES) | wc -l` /`grep "Test" $(RESFILES) | wc -l`"
 	@echo "Test errors:       `grep "ERR" $(RESFILES) | wc -l` /`grep "Test" $(RESFILES) | wc -l`"
 	@echo "See complog.txt"
-	@echo "-------------------------------------"
+	@echo "---------------------------------------"
 	@exit `grep "ERR" $(RESFILES) | wc -l`
 
 ../cad:
