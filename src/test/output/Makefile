@@ -7,7 +7,7 @@
 # If python code comiles using py_compile the .res files will be empty.
 # If there's an error, the error will be written to the .res files.
 
-TESTS=add ln num pow simple simple1 simple2 simple3 smul
+TESTS=add cos exp ln mul neg pow proj simple1 simple2 simple3 sin sub
 
 PYFILES=$(TESTS:%=%_out.py)
 RESFILES=$(TESTS:%=%_out.res)
