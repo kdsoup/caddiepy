@@ -26,6 +26,7 @@ datatype state = IdS of loc * string
                | SymbS of loc * string
                | NumS of loc * string
                | CommentS of loc * string
+               | CommentP of loc * string
                | BeginS
 
 fun tokenise {sep_chars         : string,                  (* single-char symbols *)
@@ -49,8 +50,13 @@ fun tokenise {sep_chars         : string,                  (* single-char symbol
             | CommentS (l0,"") =>
               if c = #"*" then (l',CommentS(l0,"*"),ts)
               else (l',CommentS(l0,""),ts)
+            | CommentP (l0,"#") => (l',CommentP(l0,""),ts)
+            | CommentP (l0, "") => 
+              if c = #"\n" then (l',BeginS,ts)
+              else (l',CommentP(l0,""),ts)
             | BeginS =>
-              if c = #"(" then (l',CommentS (l,"("),ts)
+              if c = #"#" then (l',CommentP (l,"#"),ts)
+              else if c = #"(" then (l',CommentS (l,"("),ts)
               else if isSepChar c then (l',BeginS,close Symb l (String.str c)::ts)
               else if isSymbChar c then (l',SymbS(l,String.str c),ts)
               else if isIdChar0 c then (l',IdS(l,String.str c),ts)
@@ -97,6 +103,7 @@ fun tokenise {sep_chars         : string,                  (* single-char symbol
             | NumS(l,s) => close Num l s :: ts
             | IdS(l,s) => close Id l s :: ts
             | CommentS _ => raise Fail "lex error: non-closed comment"
+            | CommentP _ => raise Fail "lex error: no newline after python comment"
             | BeginS => ts
     in rev ts
     end
