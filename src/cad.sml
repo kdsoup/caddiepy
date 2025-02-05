@@ -2,6 +2,8 @@
 
 fun println s = print (s ^ "\n")
 
+fun printlnpy s = print (s ^ " ")
+
 fun mapi f xs =
     let fun loop n nil = nil
           | loop n (x::xs) = f(x,n) :: loop (n+1) xs
@@ -278,8 +280,8 @@ fun unlinearise prg =
             if print_diff_unlinearised_p() then
               ( println "# Unlinearised differentiated program (python):"
               ; List.app (fn (f,arg,d,gM,_) =>
-                             ( println ("def " ^ f ^ pling ^ "(" ^ V.pp arg ^ "," ^ V.pp d ^ ")" ^ ":")      (*CADDIEPY: python function declaration: def func(): *)
-                             ; println (V.ppM "    " V.pp gM)
+                             ( printlnpy ("def " ^ f ^ pling ^ "(" ^ V.pp arg ^ "," ^ V.pp d ^ ")" ^ ":")      (*CADDIEPY: python function declaration: def func(): *)
+                             ; println (V.ppM "" V.pp gM)
                              ; println "")
                          ) prg'
               )
