@@ -41,6 +41,7 @@ out: $(OUTFILES)
 
 .PHONY: test
 test: $(RESFILES)
+	@echo ""
 	@echo "-------------- I N P U T --------------"
 	@$(CAD) --version
 	@echo ""

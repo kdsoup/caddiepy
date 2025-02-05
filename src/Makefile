@@ -11,15 +11,12 @@ cad:
 .PHONY: test
 test:
 	@echo "-------T E S T --- R E P O R T-------"
-	@echo ""
-	@$(MAKE) -C test/output
-	@$(MAKE) -C test/input
+	-@$(MAKE) -C test/input
+	-@$(MAKE) -C test/output
 
 .PHONY: clean
 clean:
 	rm -rf *~ MLB *.exe run cad
-	# $(MAKE) -C tests clean
-	# $(MAKE) -C examples clean
 	$(MAKE) -C test/input clean
 	$(MAKE) -C test/output clean
 

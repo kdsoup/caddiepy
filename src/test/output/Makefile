@@ -52,6 +52,7 @@ all: test
 # Test results
 .PHONY: test
 test: $(OUTFILES) $(RESFILES)
+	@echo ""
 	@echo "------------ O U T P U T --------------"
 	@$(CAD) --version
 	@echo ""
