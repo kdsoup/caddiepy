@@ -9,23 +9,19 @@
 
 TESTS=add cos exp ln mul neg pow proj simple1 simple2 simple3 sin sub
 
-PYFILES=$(TESTS:%=%_out.py)
+OUTFILES=$(TESTS:%=%_out.py)
 RESFILES=$(TESTS:%=%_out.res)
 LOGFILE = complog.txt
+
+RUNFILES=$(TESTS:%=%_run.py)
 
 CAD?=../../cad
 
 .PHONY: all
 all: test
 
-# .PHONY: tst
-# tst:
-# 	echo $(RESFILES)
-
 # Write python files using Caddiepy with input files from '../input'
 %_out.py: ../input/%.py $(CAD)
-	@echo "from math import *" >> $@
-	@echo "from numpy import dot, cross \n" >> $@
 	@$(CAD) --Pdiffu $< >> $@ 2>&1; echo "done" >> /dev/null
 	@$(CAD) -r --Pdiffu $< >> $@ 2>&1; echo "done" >> /dev/null
 
@@ -40,7 +36,7 @@ all: test
 
 # Test results
 .PHONY: test
-test: $(PYFILES) $(RESFILES)
+test: $(OUTFILES) $(RESFILES)
 	@echo "------------O U T P U T--------------"
 	@$(CAD) --version
 	@echo ""
@@ -51,6 +47,22 @@ test: $(PYFILES) $(RESFILES)
 	@echo "See complog.txt"
 	@echo "-------------------------------------"
 	@exit `grep "ERR" $(LOGFILE) | wc -l`
+
+
+
+# Make run files with import numpy and math library to easily import the files in python interpreter
+.PHONY: runfiles
+runfiles: $(RUNFILES)
+
+# Write python files using Caddiepy with input files from '../input'
+# These files have the math and numpy libraries imported
+%_run.py: ../input/%.py $(CAD)
+	@echo "from math import *" >> $@
+	@echo "from numpy import dot, cross \n" >> $@
+	@$(CAD) --Pdiffu $< >> $@ 2>&1; echo "done" >> /dev/null
+	@$(CAD) -r --Pdiffu $< >> $@ 2>&1; echo "done" >> /dev/null
+
+
 
 # Cleanup files
 .PHONY: clean
