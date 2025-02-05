@@ -6,4 +6,5 @@ def g_diff(x,dx): return 0
 # Unlinearised differentiated program (python):
 def f_diff_reverse(x,dy): return 0
 
-def g_diff_reverse(x,dy): return 0      # TODO Z should be 0?
+def g_diff_reverse(x,dy): return 0
+
