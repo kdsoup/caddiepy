@@ -3,3 +3,4 @@ def f_diff(x,dx): return ((2*dx) + -(cos(x)*dx))
 
 # Unlinearised differentiated program (python):
 def f_diff_reverse(x,dy): v1 = (dy*x); v2 = (2*dy); v3 = (cos(x)*-dy); v4 = (v2 + v3); return v4
+

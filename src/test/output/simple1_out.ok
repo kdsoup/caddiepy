@@ -3,3 +3,4 @@ def f1_diff(x,dx): return (pow(sin(x),-1)*(cos(x)*dx))
 
 # Unlinearised differentiated program (python):
 def f1_diff_reverse(x,dy): return (cos(x)*(pow(sin(x),-1)*dy))
+

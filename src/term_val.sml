@@ -46,8 +46,8 @@ CADDIEPY
 fun ppM0 (ind:string) (pp:v->string) (pp0:'a -> string) ((x,bs): 'a M) : string =
     case bs of
         nil => ind ^ "return " ^ pp0 x                                                (*CADDIEPY: 'return' statement for single lines *)    
-      | _ => let val bs = List.map (fn (var,v) => ind ^ "" ^ var ^ " = " ^ pp v) bs   (*CADDIEPY: remove 'let' bindings *)
-             in String.concatWith "\n" bs ^ "\n" ^ ind ^ "return " ^ pp0 x            (*CADDIEPY: 'return' replacing 'in' *)
+      | _ => let val bs = List.map (fn (var,v) => ind ^ "" ^ var ^ " = " ^ pp v ^ ";") bs   (*CADDIEPY: remove 'let' bindings *)
+             in String.concatWith " " bs ^ " " ^ ind ^ "return " ^ pp0 x            (*CADDIEPY: 'return' replacing 'in' *)
              end
 
 fun pp v =
@@ -60,7 +60,7 @@ fun pp v =
       | Bilin(p,v1,v2) => "(" ^ Prim.pp_bilin_py p (pp v1) (pp v2) ^ ")" (* py *) 
       | Var v => v
       | If(v,m1,m2) => "(if " ^ pp v ^ " then\n" ^ ppM0 "  " pp pp m1 ^ "\nelse\n" ^ ppM0 "  " pp pp m2 ^ ")"
-      | Z => "Z"
+      | Z => "0"
       (* | Prj(i,v) => "prj" ^ Int.toString i ^ "(" ^ pp v ^ ")" *)
       | Prj(i,v) => "(" ^ pp v ^ "[" ^ Int.toString (i-1) ^ "]" ^ ")" (* py *)
       | Map(x,f,vs) => "(map (fn " ^ x ^ " => " ^ ppM0 "" pp pp f ^ ") " ^ pp vs ^ ")"

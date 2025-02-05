@@ -6,4 +6,5 @@ def g_diff(x1,x2,dx1,dx2): return -(cos(x1)*dx1)
 # Unlinearised differentiated program (python):
 def f_diff_reverse(x,dy): return (cos(x)*dy)
 
-def g_diff_reverse(x1,x2,dy): v1 = (cos(x1)*-dy); return v1,Z
+def g_diff_reverse(x1,x2,dy): v1 = (cos(x1)*-dy); return v1,0
+
