@@ -1,0 +1,5 @@
+Typed program:
+ f : (real -> real)
+ f(x) = cos x
+Internal expression program:
+ f(x) = cos(x)

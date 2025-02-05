@@ -4,8 +4,7 @@
 # .py input files and compile to type inference (--Ptyped) and internal expression (--Pexp)
 # Using original makefile test from caddie
 
-# TESTS=test0 test1 test2 test3 simple ba zero num add smul
-TESTS=add num ln simple simple1 simple2 simple3 smul pow
+TESTS=add cos exp ln mul neg pow proj simple1 simple2 simple3 sin sub
 
 TESTFILES=$(TESTS:%=%.py)
 RESFILES=$(TESTFILES:%.py=%.res)
@@ -62,4 +61,4 @@ cad:
 
 .PHONY: clean
 clean:
-	rm -rf *~ *.exe *.res *.out complog.txt
+	rm -rf *~ *.exe *.res *.out complog.txt __pycache__

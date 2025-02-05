@@ -1,0 +1,8 @@
+Typed program:
+ f : (real -> real)
+ f(x) = sin x
+ g : ((real * real) -> real)
+ g(x) = 0-sin#1 (x)
+Internal expression program:
+ f(x) = sin(x)
+ g(x) = (Z+~(sin(#1(x))))

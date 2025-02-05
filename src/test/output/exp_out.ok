@@ -1,0 +1,5 @@
+# Unlinearised differentiated program (python):
+def f_diff(x,dx): return (exp(x)*dx)
+
+# Unlinearised differentiated program (python):
+def f_diff_reverse(x,dy): return (exp(x)*dy)
