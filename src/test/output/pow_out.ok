@@ -1,0 +1,9 @@
+# Unlinearised differentiated program (python):
+def f_diff(x,dx): return Z
+
+def g_diff(x,dx): return Z
+
+# Unlinearised differentiated program (python):
+def f_diff_reverse(x,dy): return Z
+
+def g_diff_reverse(x,dy): return Z      # TODO Z should be 0?

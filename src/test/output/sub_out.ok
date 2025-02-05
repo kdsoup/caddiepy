@@ -1,0 +1,9 @@
+# Unlinearised differentiated program (python):
+def f_diff(x,dx): return dx
+
+def g_diff(x,dx): return dx,-dx
+
+# Unlinearised differentiated program (python):
+def f_diff_reverse(x,dy): return dy
+
+def g_diff_reverse(x,dy1,dy2): return (dy1 + -dy2)

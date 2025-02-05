@@ -55,4 +55,4 @@ test: $(PYFILES) $(RESFILES)
 # Cleanup files
 .PHONY: clean
 clean:
-	rm -rf *~ *.exe *.res complog.txt *.py  __pycache__
+	rm -rf *~ *.exe *.res complog.txt *.py __pycache__
