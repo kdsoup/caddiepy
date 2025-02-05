@@ -1,0 +1,5 @@
+Typed program:
+ f : (real -> real)
+ f(x) = exp x
+Internal expression program:
+ f(x) = exp(x)

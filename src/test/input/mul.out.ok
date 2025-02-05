@@ -1,0 +1,8 @@
+Typed program:
+ f : (real -> real)
+ f(x) = 3.4*x
+ g : (real -> real)
+ g(y) = (2*y)*f y
+Internal expression program:
+ f(x) = (3.4*x)
+ g(y) = ((2*y)*(f(y)))
