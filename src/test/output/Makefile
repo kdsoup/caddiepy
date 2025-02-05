@@ -26,13 +26,28 @@ all: test
 	@$(CAD) -r --Pdiffu $< >> $@ 2>&1; echo "done" >> /dev/null
 
 # Check that *_out.py files can compile and write result to complog.txt file
-%_out.res: %_out.py
-	@(python -m py_compile $< > $@ 2>&1; \
-		if [ $$? -eq 0 ]; then \
-			echo "Test $*: OK" >> $(LOGFILE) \
-		; else \
-			echo "Test $*: *** ERR: file $< does not compile to python ***" >> $(LOGFILE) \
-		; fi)
+# %_out.res: %_out.py
+# 	@(python -m py_compile $< > $@ 2>&1; \
+# 		if [ $$? -eq 0 ]; then \
+# 			echo "Test $*: OK" >> $(LOGFILE) \
+# 		; else \
+# 			echo "Test $*: *** ERR: file $< does not compile to python ***" >> $(LOGFILE) \
+# 		; fi)
+
+# Check generated _out.py files against the expected _out.ok files and write to log
+%_out.res: %_out.py %_out.ok
+	@(diff -aq $< $*_out.ok > /dev/null 2>&1; \
+         if [ $$? -eq 0 ]; then \
+             echo "Test $*: OK" > $@ \
+         ; else \
+             if [ -e $*_out.ok ]; then \
+                echo "Test $*: *** ERR: file $< differs from $*_out.ok ***" > $@ \
+             ; else \
+                echo "Test $*: *** ERR: file $*_out.ok does not exist ***" > $@ \
+             ; fi \
+         ; fi)
+	@cat $@
+	@cat $@ >> complog.txt
 
 # Test results
 .PHONY: test
