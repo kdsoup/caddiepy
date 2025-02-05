@@ -3,6 +3,5 @@ run
 *.exe
 *~
 cad
-lib/github.com/diku-dk/sml-parse/*
-lib/github.com/diku-dk/sml-uref
-!lib/github.com/diku-dk/sml-parse/SimpleToken.sml
+lib/github.com/diku-dk/sml-parse/MLB
+lib/github.com/diku-dk/sml-uref/MLB
