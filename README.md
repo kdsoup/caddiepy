@@ -11,6 +11,12 @@ Most of the code for Caddiepy is adapted from the implementation of Caddie. The 
 
 The Caddiepy project is the subject of a Bachelor's thesis in Computer Science at DIKU, University of Copenhagen.
 
+
+# Setup
+
+Coming soon...
+
+
 # How to use
 
 Guide coming soon...
