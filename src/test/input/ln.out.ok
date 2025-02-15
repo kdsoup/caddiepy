@@ -4,8 +4,8 @@ Typed program:
  f2 : (real -> real)
  f2(x) = ln(x*ln x)
  f3 : ((real * real) -> real)
- f3(x) = ln(#1 x*cos#2 (x))
+ f3(x) = ln(#1 x*sin#2 (x))
 Internal expression program:
  f1(x) = ln(x)
  f2(x) = ln((x*ln(x)))
- f3(x) = ln((#1(x)*cos(#2(x))))
+ f3(x) = ln((#1(x)*sin(#2(x))))

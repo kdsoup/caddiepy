@@ -1,8 +1,8 @@
 Typed program:
  f : (real -> real)
- f(x) = pow 3 2
+ f(x) = pow 3 x
  g : (real -> real)
  g(x) = pow 2.5 (f x)
 Internal expression program:
- f(x) = pow(3)(2)
+ f(x) = pow(3)(x)
  g(x) = pow(2.5)((f(x)))
