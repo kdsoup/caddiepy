@@ -1,8 +1,11 @@
 .PHONY: all
-all: test
+all: test -i
 
-.PHONE: test
+.PHONY: test
 test:
-	# $(MAKE) -C ../output 
-	@python -m unittest -v test0.py
+	@python -m unittest -v > log.txt 2>&1
+
+.PHONY: clean
+clean:
+	rm -rf log.txt __pycache__
 
