@@ -1,10 +1,10 @@
 # Unlinearised differentiated program (python):
-def f_diff(x,dx): return 0
+def f_diff(x,dx): return ((3*pow(x,2))*dx)
 
-def g_diff(x,dx): return 0
+def g_diff(x,dx): return ((2.5*pow(pow(x,3),1.5))*((3*pow(x,2))*dx))
 
 # Unlinearised differentiated program (python):
-def f_diff_reverse(x,dy): return 0
+def f_diff_reverse(x,dy): return ((3*pow(x,2))*dy)
 
-def g_diff_reverse(x,dy): return 0
+def g_diff_reverse(x,dy): return ((3*pow(x,2))*((2.5*pow(pow(x,3),1.5))*dy))
 

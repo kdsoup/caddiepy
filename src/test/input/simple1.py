@@ -1,2 +1,2 @@
 
-def f1(x): return log(sin(x))
+def f(x): return log(sin(x))
