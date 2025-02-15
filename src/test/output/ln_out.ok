@@ -3,12 +3,12 @@ def f1_diff(x,dx): return (pow(x,-1)*dx)
 
 def f2_diff(x,dx): v1 = log(x); return (pow((x*v1),-1)*((dx*v1) + (x*(pow(x,-1)*dx))))
 
-def f3_diff(x1,x2,dx1,dx2): v2 = cos(x2); return (pow((x1*v2),-1)*((dx1*v2) + (x1*(-sin(x2)*dx2))))
+def f3_diff(x1,x2,dx1,dx2): v2 = sin(x2); return (pow((x1*v2),-1)*((dx1*v2) + (x1*(cos(x2)*dx2))))
 
 # Unlinearised differentiated program (python):
 def f1_diff_reverse(x,dy): return (pow(x,-1)*dy)
 
 def f2_diff_reverse(x,dy): v1 = log(x); v3 = (pow((x*v1),-1)*dy); return ((v3*v1) + (pow(x,-1)*(x*v3)))
 
-def f3_diff_reverse(x1,x2,dy): v2 = cos(x2); v4 = (pow((x1*v2),-1)*dy); v5 = (v4*v2); v6 = (-sin(x2)*(x1*v4)); return v5,v6
+def f3_diff_reverse(x1,x2,dy): v2 = sin(x2); v4 = (pow((x1*v2),-1)*dy); v5 = (v4*v2); v6 = (cos(x2)*(x1*v4)); return v5,v6
 
