@@ -29,9 +29,9 @@ val verbose_p = CmdArgs.addFlag ("-verbose", SOME ["Be verbose."])
 
 val exp_str = CmdArgs.addString ("e", "", SOME ["Expression to be evaluated after loading of program files."])
 
-val () = CmdArgs.addUsage ("-help", "options... file1.cad ... fileN.cad")
+val () = CmdArgs.addUsage ("-help", "options... file1.py ... fileN.py")
 
-val () = CmdArgs.addVersion ("-version", "Combinatory AD (CAD) v0.0.1")
+val () = CmdArgs.addVersion ("-version", "Combinatory AD (CAD) for Python v0.0.1")
 
 val print_typed_p = CmdArgs.addFlag ("-Ptyped", SOME ["Print program after type inference."])
 val print_exp_p = CmdArgs.addFlag ("-Pexp", SOME ["Print internal expression program."])
