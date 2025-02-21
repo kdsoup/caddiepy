@@ -1,0 +1,1 @@
+def l(x): a = x[0]; b = x[1]; c = x[2]; d = x[3]; t = x[4]; return pow(((a + b * t + c * t * t + d * t * t * t) - sin(t)), 2.0)
