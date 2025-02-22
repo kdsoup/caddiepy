@@ -280,8 +280,8 @@ fun unlinearise prg =
             if print_diff_unlinearised_p() then
               ( println "# Unlinearised differentiated program (python):"
               ; List.app (fn (f,arg,d,gM,_) =>
-                             ( println_py ("def " ^ f ^ pling ^ "(" ^ V.pp arg ^ "," ^ V.pp d ^ ")" ^ ":")
-                             ; println (V.ppM "" V.pp gM)
+                             ( println_py ("def " ^ f ^ pling ^ "(" ^ V.pp_py arg ^ "," ^ V.pp_py d ^ ")" ^ ":")
+                             ; println (V.ppM_py "" V.pp_py gM)
                              ; println "")
                          ) prg'
               )
