@@ -2,7 +2,7 @@
 
 fun println s = print (s ^ "\n")
 
-fun printlnpy s = print (s ^ " ")
+fun println_py s = print (s ^ " ")
 
 fun mapi f xs =
     let fun loop n nil = nil
@@ -275,12 +275,12 @@ fun unlinearise prg =
             in (f,arg,d,gM,(r,t))
             end
         val prg' = List.map unlin prg
-        val pling = if rad_p() then "_diff_reverse" else "_diff"      (* CADDIEPY: pp for diff function markers*)
+        val pling = if rad_p() then "_diff_reverse" else "_diff"
         val () =
             if print_diff_unlinearised_p() then
               ( println "# Unlinearised differentiated program (python):"
               ; List.app (fn (f,arg,d,gM,_) =>
-                             ( printlnpy ("def " ^ f ^ pling ^ "(" ^ V.pp arg ^ "," ^ V.pp d ^ ")" ^ ":")      (*CADDIEPY: python function declaration: def func(): *)
+                             ( println_py ("def " ^ f ^ pling ^ "(" ^ V.pp arg ^ "," ^ V.pp d ^ ")" ^ ":")
                              ; println (V.ppM "" V.pp gM)
                              ; println "")
                          ) prg'
@@ -289,7 +289,6 @@ fun unlinearise prg =
     in prg'
     end
 
-(* caddiepy *)
 fun main () =
     let val parseRes = parseEval()
         val compRes = compile parseRes
