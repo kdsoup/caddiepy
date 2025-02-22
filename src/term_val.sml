@@ -84,6 +84,7 @@ fun pp_py v =
       | Var v => v
       | Z => "0"
       | Prj(i,v) => "(" ^ pp_py v ^ "[" ^ Int.toString (i-1) ^ "]" ^ ")"
+      | _ => die (pp v ^ " not defined for Caddiepy!")
 
 (* Monad *)
 fun ppM_py (ind:string) (pp0:'a -> string) (m: 'a M) : string =
