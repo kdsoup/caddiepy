@@ -77,7 +77,7 @@ fun ppM0_py (ind:string) (pp:v->string) (pp0:'a -> string) ((x,bs): 'a M) : stri
 fun pp_py v =
     case v of
         R r => real_to_string r
-      | T vs => "" ^ String.concatWith "," (map pp_py vs) ^ ""               (*CADDIEPY: remove paranthesis from tuples in python function input arguments*)
+      | T vs => "" ^ String.concatWith "," (map pp_py vs) ^ ""
       | Uprim(p,v) => Prim.pp_uprim_py (p, pp_py v)
       | Add(v1,v2) => "(" ^ pp_py v1 ^ " + " ^ pp_py v2 ^ ")"
       | Bilin(p,v1,v2) => "(" ^ Prim.pp_bilin_py p (pp_py v1) (pp_py v2) ^ ")"
