@@ -14,7 +14,7 @@ The Caddiepy project is the subject of my Bachelor's thesis in Computer Science 
 
 # Setup
 
-To be able to run Caddiepy, the Standard ML compiler toolkit [MLKit](github.com/melsman/mlkit) is required. 
+To be able to run Caddiepy, the Standard ML compiler toolkit [MLKit](https://github.com/melsman/mlkit) is required. 
 The MLKit repository provides instructions for installing the toolkit. 
 For macOS ARM computers, MLKit has to be installed using Rosetta.  
 
