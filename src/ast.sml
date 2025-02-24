@@ -83,6 +83,7 @@ open P
 datatype 'i exp = Real of real * 'i
                 | Int of int * 'i
                 | Zero of 'i
+                | Neg of 'i exp * 'i
                 | Let of string * 'i exp * 'i exp * 'i
                 | Add of 'i exp * 'i exp * 'i
                 | Sub of 'i exp * 'i exp * 'i
@@ -119,6 +120,7 @@ fun pr_exp (e: 'i exp) : string =
                  in if p = 9 then " " ^ s else s
                  end
               | Zero r =>  if p = 9 then " 0" else "0"
+              | Neg (e,_) => "~" ^ par p 6 (pr 6 e)
               | Let (x,e1,e2,_) => "let " ^ x ^ " = " ^ pr 0 e1 ^ " in " ^ pr 0 e2 ^ " end"
               | Add (e1,e2,_) => par p 6 (pr 6 e1 ^ "+" ^ pr 6 e2)
               | Sub (e1,e2,_) => par p 6 (pr 6 e1 ^ "-" ^ pr 6 e2)
@@ -244,6 +246,7 @@ val VEinit : v env =
      lift1r "tan" Math.tan,
      lift1r "exp" Math.exp,
      lift1r "ln" Math.ln,
+     (* lift1r "neg" (fn r => ~r), *)
      lift_rNxrN_r "dprod" (ListPair.foldlEq(fn (r1,r2,a) => a + (r1*r2)) 0.0),
      lift_rxrN_rN "sprod" (fn (r,rs) => List.map (fn q => q*r) rs),
      lift_r3xr3_r3 "cprod3" (fn ((a1,a2,a3),(b1,b2,b3)) =>
@@ -343,6 +346,7 @@ fun eval (regof:'i -> Region.reg) (E:v env) (e:'i exp) : v =
                 Real (r,_) => Real_v r
               | Int (n,_)  => Int_v n
               | Zero r => Zero_v
+              | Neg (e,i) => liftNeg (regof i) (ev E e)
               | Let (x,e1,e2,_) => ev ((x,ev E e1)::E) e2
               | Var (x,i) =>
                 (case look E x of
@@ -491,6 +495,7 @@ and p_ae : rexp p =
          || ((p_var >>> p_ae) oor (fn ((v,e),r) => App(v,e,r)))
          || (((((p_kw "pow" ->> p_symb "(") ->> p_ae) >>- p_symb ",") >>> (p_real >>- p_symb ")")) oor (fn ((e,f),r) => Pow(f,e,r)))
          || ((((p_kw "log" ->> p_symb "(") ->> p_e) >>- p_symb ")") oor (fn (e,r) => App("ln",e,r)))
+         || (((p_symb "-") ->> p_e) oor (fn (e,r) => Neg (e,r)))
          || (p_var oor Var)
          || (p_zero oor (fn ((),i) => Zero i))
          || (p_int oor Int)
@@ -662,6 +667,7 @@ val TEinit : ty env =
      ("tan", fun_ty(real_ty,real_ty)),
      ("exp", fun_ty(real_ty,real_ty)),
      ("ln", fun_ty(real_ty,real_ty)),
+     (* ("~", fun_ty(real_ty,real_ty)), *)
      ("cprod3", fun_ty(pair_ty(real3_ty,real3_ty),real3_ty)),
      ("cross", fun_ty(pair_ty(real_arr_ty,real_arr_ty),real_arr_ty)),  (* cprod3 on arrays *)
      ("dprod3", fun_ty(pair_ty(real3_ty,real3_ty),real_ty)),
@@ -765,6 +771,7 @@ fun info_of_exp (e: 'i exp) : 'i =
         Real(_,i) => i
       | Int(_,i) => i
       | Zero i => i
+      | Neg (_,i) => i
       | Let(_,_,_,i) => i
       | Add(_,_,i) => i
       | Sub(_,_,i) => i
@@ -811,6 +818,10 @@ fun tyinf_exp (TE: ty env) (e:Region.reg exp) : (Region.reg*ty) exp * ty =
          | Zero r =>
            let val t = nonfun_ty()
            in (Zero (r,t), t)
+           end
+         | Neg (e,r) => 
+           let val (e',ty1) = tyinf_exp TE e
+           in (Neg (e',(r,ty1)), ty1)
            end
          | Let (x,e1,e2,r) =>
            let val (e1',ty1) = tyinf_exp TE e1
@@ -1005,6 +1016,7 @@ fun resolve_ints e =
         Real _ => e
       | Int (n,(r,t)) => if is_real t then Real (real n,(r,t)) else e
       | Zero _ => e
+      | Neg (e,i) => Neg (resolve_ints e, i)
       | Let (x,e1,e2,i) => Let (x,resolve_ints e1,resolve_ints e2,i)
       | Add (e1,e2,i) => Add (resolve_ints e1,resolve_ints e2,i)
       | Sub (e1,e2,i) => Sub (resolve_ints e1,resolve_ints e2,i)

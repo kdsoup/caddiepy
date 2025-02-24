@@ -3,6 +3,7 @@ signature AST = sig
   datatype 'i exp = Real of real * 'i
                   | Int of int * 'i
                   | Zero of 'i
+                  | Neg of 'i exp * 'i
                   | Let of string * 'i exp * 'i exp * 'i
                   | Add of 'i exp * 'i exp * 'i
                   | Sub of 'i exp * 'i exp * 'i
