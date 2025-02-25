@@ -491,6 +491,7 @@ and p_ae : rexp p =
          || ((p_var >>> p_ae) oor (fn ((v,e),r) => App(v,e,r)))
          || (((((p_kw "pow" ->> p_symb "(") ->> p_ae) >>- p_symb ",") >>> (p_real >>- p_symb ")")) oor (fn ((e,f),r) => Pow(f,e,r)))
          || ((((p_kw "log" ->> p_symb "(") ->> p_e) >>- p_symb ")") oor (fn (e,r) => App("ln",e,r)))
+         || (((p_symb "-") ->> p_ae) oor (fn (e,r) => Sub (Zero r, e,r)))
          || (p_var oor Var)
          || (p_zero oor (fn ((),i) => Zero i))
          || (p_int oor Int)
