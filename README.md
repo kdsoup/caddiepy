@@ -9,9 +9,6 @@ The Caddiepy tool can differentiate Python programs to linear map derivative cod
 
 Most of the code for Caddiepy is adapted from the implementation of Caddie. The theory of Combinatory Automatic Differentiation is based on the paper [Combinatory Adjoints and Differentiation](https://elsman.com/pdf/msfp22.pdf) [1].
 
-The Caddiepy project is the subject of my Bachelor's thesis in Computer Science at DIKU, University of Copenhagen.
-
-
 # Setup
 
 To be able to run Caddiepy, the Standard ML compiler toolkit [MLKit](https://github.com/melsman/mlkit) is required. 
