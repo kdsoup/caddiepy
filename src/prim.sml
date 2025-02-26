@@ -21,14 +21,16 @@ structure Prim :> PRIM = struct
         | Neg => "~"
         | Pow r => "pow(" ^ real_to_string r ^ ")"
   
+  (* Caddiepy uprim functions *)
   fun pp_uprim_py (p: uprim, v: string) =
       case p of
           Sin => "sin(" ^ v ^ ")"
         | Cos => "cos(" ^ v ^ ")"
         | Ln => "log(" ^ v ^ ")"
         | Exp => "exp(" ^ v ^ ")"
-        | Neg => "-" ^ v                                        (*CADDIEPY: neg '~' to '-' for python syntax*)
-        | Pow r => "pow(" ^ v ^ "," ^ real_to_string r ^ ")"    (*CADDIEPY: pow syntax*)
+        | Neg => "-" ^ v
+        | Pow r => "pow(" ^ v ^ "," ^ real_to_string r ^ ")" 
+
   datatype bilin = Mul     (* : R x R -> R             multiplication *)
                  | Cprod3  (* : R3 x R3 -2> R3         cross product *)
                  | Dprod   (* : RN x RN -2> R          dot product *)
@@ -42,6 +44,7 @@ structure Prim :> PRIM = struct
         | Sprod => "."
         | Norm2Sq => "norm2sq"
 
+  (* Caddiepy bilinear functions *)
   fun pp_bilin_py b v1 v2 =
       case b of
           Mul => v1 ^ "*" ^ v2

@@ -106,10 +106,7 @@ datatype 'i exp = Real of real * 'i
 fun par p x s =
     if x > p then s else "(" ^ s ^ ")"
 
-(* 
-CADDIEPY
-Affects Typed program: --Ptyped 
-*)
+(* Typed program: --Ptyped *)
 fun pr_exp (e: 'i exp) : string =
     let fun pr (p:int) (e: 'i exp) : string =
             case e of
@@ -394,13 +391,11 @@ fun eval (regof:'i -> Region.reg) (E:v env) (e:'i exp) : v =
     in ev E e
     end
 
-(*CADDIEPY parser *)
-
 fun locOfTs nil = Region.botloc
   | locOfTs ((_,(l,_))::_) = l
 
-(* val kws = ["let", "in", "end", "fun", "map", "iota", "fn", "pow", "red"] *)
-val kws_py = ["def", "return", "log", "multiply", "pow"]   (* python keywords *)
+(* Caddiepy keywords *)
+val kws_py = ["def", "return", "log", "pow"]  
 
 val p_zero : unit p =
  fn ts =>
@@ -417,7 +412,7 @@ val p_int : int p =
            | _ => NO(locOfTs ts, fn () => "int"))
       | _ => NO(locOfTs ts, fn () => "int")
 
-(* CADDIEPY: make 0-indexing from python to 1-indexing for projection; x[0] = #1 x *)
+(* Make 0-indexing from python to 1-indexing for projection; x[0] = #1 x *)
 val p_index : int p =
  fn ts =>
     case ts of
@@ -471,22 +466,18 @@ fun p_seq start finish (p: 'a p) : 'a list p =
 type rexp = Region.reg exp
 type rrel = Region.reg rel
 
+(* Parse expression *)
 val rec p_e : rexp p =
     fn ts =>
        ( (p_e0 ??* ((p_bin "+" Add p_e0) || (p_bin "-" Sub p_e0))) (fn (e,f) => f e)
        ) ts
-
-(* and p_e0 : rexp p =
-    fn ts =>
-       ( (p_ae ??* ((p_bin "*" Mul p_ae) || (p_bin "*>" Smul p_e0))) (fn (e,f) => f e)
-       ) ts *)
 
 and p_e0 : rexp p =
     fn ts =>
        ( (p_ae ??* (p_bin "*" Mul p_ae)) (fn (e,f) => f e)
        ) ts
 
-(* CADDIEPY: parsing variable for projection *)
+(* Parsing variable for projection *)
 and p_e_prj : rexp p =
   fn ts =>
       ( (p_var oor Var)
@@ -494,44 +485,17 @@ and p_e_prj : rexp p =
 
 and p_ae : rexp p =
     fn ts =>
-       (    ((p_kw "return") ->> p_e)   (*caddiepy*)
-
-         (* CADDIEPY: variable bindings *)
-         || ((p_var >>> ((p_symb "=" ->> p_e) >>> (p_symb ";" ->> p_e))) oor (fn ((v,(e1,e2)),r) => Let(v,e1,e2,r)))  
-         (* || (((p_kw "let" ->> p_var) >>> ((p_symb "=" ->> p_e) >>> (p_kw "in" ->> p_e)) >>- p_kw "end") oor (fn ((v,(e1,e2)),r) => Let(v,e1,e2,r))) *)
-         
-         (* CADDIEPY parse x[1] porjection indexing *)
+       (    ((p_kw "return") ->> p_e)
+         || ((p_var >>> ((p_symb "=" ->> p_e) >>> (p_symb ";" ->> p_e))) oor (fn ((v,(e1,e2)),r) => Let(v,e1,e2,r)))    (* Variable bindings *)
          || ((p_e_prj >>> ((p_symb "[" ->> p_index) >>- p_symb "]")) oor (fn ((e,i),r) => Prj(i,e,r)))
-         (* || ((p_var >>> ((p_symb "[" ->> p_index) >>- p_symb "]")) oor (fn ((v,i),r) => Prj(i,Var(v,r),r))) *)   (* Alternative declaration. *)
-         (* || (((p_symb "#" ->> p_int) >>> p_ae) oor (fn ((i,e),r) => Prj(i,e,r))) *)
-
          || ((p_var >>> p_ae) oor (fn ((v,e),r) => App(v,e,r)))
-
-         (* CADDIEPY: pow *)
-         (* || (((p_kw "pow" ->> p_real) >>> p_ae) oor (fn ((f,e),r) => Pow(f,e,r))) *)
          || (((((p_kw "pow" ->> p_symb "(") ->> p_ae) >>- p_symb ",") >>> (p_real >>- p_symb ")")) oor (fn ((e,f),r) => Pow(f,e,r)))
-
-         (* CADDIEPY: parse log -> ln *)
          || ((((p_kw "log" ->> p_symb "(") ->> p_e) >>- p_symb ")") oor (fn (e,r) => App("ln",e,r)))
-
-         (* CADDIEPY: Smul *)
-         || (((((p_kw "multiply" ->> p_symb "(") ->> p_ae) >>- p_symb ",") >>> (p_ae >>- p_symb ")")) oor (fn ((e1,e2),r) => Smul(e1,e2,r)))
-
          || (p_var oor Var)
          || (p_zero oor (fn ((),i) => Zero i))
          || (p_int oor Int)
          || (p_real oor Real)
          || ((p_seq "(" ")" p_e) oor (fn ([e],_) => e | (es,r) => Tuple (es,r)))
-         || (((p_kw "map" ->> ((p_symb "("
-                              ->> (((p_kw "fn" ->> p_var) >>- p_symb "=>") >>> p_e))
-                              >>- p_symb ")")) >>> p_ae)
-                              oor (fn (((x, f), e), r) => Map (x, f, e, r)))
-         || ((p_kw "iota" ->> p_int) oor (fn (n, r) => Iota (n, r)))
-         || (((p_kw "red" ->> p_rrel) >>> p_ae) oor (fn ((rel, es), r) => Red (rel, es, r)))
-         || ((p_seq "[" "]" p_e) oor Array)
-         || (((((((p_symb "[" ->> p_e) >>- p_symb "..") >>> p_e)
-             >>- p_symb ",") >>> p_e) >>- p_symb "]")
-            oor (fn (((from,to),step), r) => Range (from,to,step,r)))
       ) ts
 
 and p_bin : string -> (rexp*rexp*Region.reg->rexp) -> rexp p -> (rexp -> rexp) p =
@@ -579,7 +543,7 @@ type 'i prg = (string * string * 'i exp * 'i) list
 
 type rprg = Region.reg prg
 
-(* PARSE PYTHON INPUT FILE START *)
+(* Parse program *)
 val rec p_prg : rprg p =
     fn ts =>
        (  ((((((((p_kw "def" ->> p_var) >>- p_symb "(") >>> p_var) >>- p_symb ")") >>- p_symb ":") >>> p_e) oor (fn (((f,x),e),r) => [(f,x,e,r)])) ??* p_prg) (op @)

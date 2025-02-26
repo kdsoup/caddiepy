@@ -39,30 +39,23 @@ fun real_to_string r =
        else s
     end
 
-(*  
-CADDIEPY
---Pdiffu pretty printing
-*)
 fun ppM0 (ind:string) (pp:v->string) (pp0:'a -> string) ((x,bs): 'a M) : string =
     case bs of
-        nil => ind ^ "return " ^ pp0 x                                                (*CADDIEPY: 'return' statement for single lines *)    
-      | _ => let val bs = List.map (fn (var,v) => ind ^ "" ^ var ^ " = " ^ pp v ^ ";") bs   (*CADDIEPY: remove 'let' bindings *)
-             in String.concatWith " " bs ^ " " ^ ind ^ "return " ^ pp0 x            (*CADDIEPY: 'return' replacing 'in' *)
+        nil => ind ^ pp0 x
+      | _ => let val bs = List.map (fn (var,v) => ind ^ "let " ^ var ^ " = " ^ pp v) bs
+             in String.concatWith "\n" bs ^ "\n" ^ ind ^ "in " ^ pp0 x
              end
-
 fun pp v =
     case v of
         R r => real_to_string r
-      | T vs => "" ^ String.concatWith "," (map pp vs) ^ ""               (*CADDIEPY: remove paranthesis from tuples in python function input arguments*)
-      | Uprim(p,v) => Prim.pp_uprim_py (p, pp v)                          (*CADDIEPY: new function applying python syntax for pow*)
+      | T vs => "(" ^ String.concatWith "," (map pp vs) ^ ")"
+      | Uprim(p,v) => Prim.pp_uprim p ^ "(" ^ pp v ^ ")"
       | Add(v1,v2) => "(" ^ pp v1 ^ " + " ^ pp v2 ^ ")"
-      (* | Bilin(p,v1,v2) => "(" ^ pp v1 ^ " " ^ Prim.pp_bilin p ^ " " ^ pp v2 ^ ")" *)
-      | Bilin(p,v1,v2) => "(" ^ Prim.pp_bilin_py p (pp v1) (pp v2) ^ ")" (* py *) 
+      | Bilin(p,v1,v2) => "(" ^ pp v1 ^ " " ^ Prim.pp_bilin p ^ " " ^ pp v2 ^ ")"
       | Var v => v
       | If(v,m1,m2) => "(if " ^ pp v ^ " then\n" ^ ppM0 "  " pp pp m1 ^ "\nelse\n" ^ ppM0 "  " pp pp m2 ^ ")"
-      | Z => "0"
-      (* | Prj(i,v) => "prj" ^ Int.toString i ^ "(" ^ pp v ^ ")" *)
-      | Prj(i,v) => "(" ^ pp v ^ "[" ^ Int.toString (i-1) ^ "]" ^ ")" (* py *)
+      | Z => "Z"
+      | Prj(i,v) => "prj" ^ Int.toString i ^ "(" ^ pp v ^ ")"
       | Map(x,f,vs) => "(map (fn " ^ x ^ " => " ^ ppM0 "" pp pp f ^ ") " ^ pp vs ^ ")"
       | Zip (x,fs,vs) => "(zip [" ^ String.concatWith "," (map (fn f => "fn " ^ x ^ " => " ^ pp f) fs) ^ "])"
       | Nth(v,n) => pp v ^ "[" ^ Int.toString n ^ "]"
@@ -70,6 +63,32 @@ fun pp v =
 
 fun ppM (ind:string) (pp0:'a -> string) (m: 'a M) : string =
     ppM0 ind pp pp0 m
+
+(* Caddiepy unlinearised output *)
+(* Function scope *)
+fun ppM0_py (ind:string) (pp:v->string) (pp0:'a -> string) ((x,bs): 'a M) : string =
+    case bs of
+        nil => ind ^ "return " ^ pp0 x
+      | _ => let val bs = List.map (fn (var,v) => ind ^ "" ^ var ^ " = " ^ pp v ^ ";") bs
+             in String.concatWith " " bs ^ " " ^ ind ^ "return " ^ pp0 x
+             end
+
+(* Values *)
+fun pp_py v =
+    case v of
+        R r => real_to_string r
+      | T vs => "" ^ String.concatWith "," (map pp_py vs) ^ ""
+      | Uprim(p,v) => Prim.pp_uprim_py (p, pp_py v)
+      | Add(v1,v2) => "(" ^ pp_py v1 ^ " + " ^ pp_py v2 ^ ")"
+      | Bilin(p,v1,v2) => "(" ^ Prim.pp_bilin_py p (pp_py v1) (pp_py v2) ^ ")"
+      | Var v => v
+      | Z => "0"
+      | Prj(i,v) => "(" ^ pp_py v ^ "[" ^ Int.toString (i-1) ^ "]" ^ ")"
+      | _ => die (pp v ^ " not defined for Caddiepy!")
+
+(* Monad *)
+fun ppM_py (ind:string) (pp0:'a -> string) (m: 'a M) : string =
+    ppM0_py ind pp_py pp0 m
 
 fun iff (v,m1,m2) = If(v,m1,m2)
 
