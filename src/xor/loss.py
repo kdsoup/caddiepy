@@ -2,6 +2,8 @@
 # sigmoid       R^2 -> R^2
 # second layer  R^2 -> R
 
+def dot(xs): return xs[0] * xs[1]
+
 def sigmoid(x): return pow((1 + exp(-1 * x[1])), -1.0)
 
 # squared loss (y - y')^2
