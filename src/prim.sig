@@ -2,7 +2,7 @@
 signature PRIM = sig
   datatype uprim = Sin | Cos | Ln | Exp | Pow of real | Neg
   val pp_uprim : uprim -> string
-  val pp_uprim_py : uprim * string -> string          (*CADDIEPY*)
+  val pp_uprim_py : uprim * string -> string
 
   datatype bilin = Mul     (* : R x R -2> R            multiplication *)
                  | Cprod3  (* : R3 x R3 -2> R3         cross product *)
@@ -10,7 +10,7 @@ signature PRIM = sig
                  | Sprod   (* : R * RN -2> RN          scalar product *)
                  | Norm2Sq (* : R x R -2> R            \(x,y).(x^2+y^2) *)
   val pp_bilin : bilin -> string    (* all to be printed infix *)
-  val pp_bilin_py : bilin -> string -> string -> string   (*CADDIEPY*)
+  val pp_bilin_py : bilin -> string -> string -> string
 
   val mul      : real * real -> real
   val cprod3   : real list * real list -> real list
