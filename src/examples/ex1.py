@@ -1,0 +1,1 @@
+def f(x): return x[0] * sin(x[1])

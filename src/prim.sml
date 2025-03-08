@@ -48,10 +48,10 @@ structure Prim :> PRIM = struct
   fun pp_bilin_py b v1 v2 =
       case b of
           Mul => v1 ^ "*" ^ v2
-        | Cprod3 => "cross" ^ "(" ^ v1 ^ "," ^ v2 ^ ")"
-        | Dprod => "dot(" ^ v1 ^ "," ^ v2 ^ ")"
-        | Sprod => v1 ^ "*" ^ v2
-        | Norm2Sq => v1 ^ "**2 + " ^ v2 ^ "**2" 
+        (* | Cprod3 => "cross" ^ "(" ^ v1 ^ "," ^ v2 ^ ")" *)
+        (* | Dprod => "dot(" ^ v1 ^ "," ^ v2 ^ ")" *)
+        (* | Sprod => v1 ^ "*" ^ v2 *)
+        (* | Norm2Sq => v1 ^ "**2 + " ^ v2 ^ "**2"  *)
 
   val mul : real * real -> real = op *
   fun cprod3 ([a1,a2,a3], [b1,b2,b3]) : real list =
