@@ -1,8 +1,6 @@
-from math import *
-from numpy import dot, cross 
+# Unlinearised differentiated program (python):
+def f_diff(x,dx): return -dx
 
-# ERROR: ../input/neg.py:2.17: expecting keyword 'return', but found number or symbol
-# ERROR: Pass the --help option for assistance
-# ERROR: ../input/neg.py:2.17: expecting keyword 'return', but found number or symbol
-# ERROR: Pass the --help option for assistance
+# Unlinearised differentiated program (python):
+def f_diff_reverse(x,dy): return -dy
 
