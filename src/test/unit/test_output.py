@@ -120,12 +120,18 @@ class TestPyOutputFiles(unittest.TestCase):
 
     def test_neg(self):
         # ARRANGE
-        # TODO
+        def f_diff(x,dx): return -dx
+        def f_diff_reverse(x,dy): return -dy
         
         # ACT
+        f_diff_result = f_diff(1.5, 1.0)
+        f_diff_expect = -1.0
+        f_diff_reverse_result = f_diff_reverse(1.5, 1.0)
+        f_diff_reverse_expect = -1.0
         
         # ASSERT
-        self.assertTrue(False)
+        self.assertAlmostEqual(f_diff_expect, f_diff_result, 6)
+        self.assertAlmostEqual(f_diff_reverse_expect, f_diff_reverse_result, 6)
 
     def test_pow(self):
         # ARRANGE

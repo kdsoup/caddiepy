@@ -474,7 +474,12 @@ val rec p_e : rexp p =
 
 and p_e0 : rexp p =
     fn ts =>
-       ( (p_ae ??* (p_bin "*" Mul p_ae)) (fn (e,f) => f e)
+       ( (p_e1 ??* (p_bin "*" Mul p_e1)) (fn (e,f) => f e)
+       ) ts
+
+and p_e1 : rexp p =
+    fn ts =>
+       ( (((p_symb "-") ->> p_e1) oor (fn (e,r) => Sub (Zero r,e,r))) || p_ae
        ) ts
 
 (* Parsing variable for projection *)
