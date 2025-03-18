@@ -7,7 +7,15 @@ This project is a Python context implementation of the standalone tool [Caddie](
 The aim of the implementation is to enable Combinatory Automatic Differentiation to be used in a Python programming context. 
 The Caddiepy tool can differentiate Python programs to linear map derivative code using a forward-mode and a reverse-mode automatic differentiation.
 
-Most of the code for Caddiepy is adapted from the implementation of Caddie. The theory of Combinatory Automatic Differentiation is based on the paper [Combinatory Adjoints and Differentiation](https://elsman.com/pdf/msfp22.pdf) [1].
+Consider the Python function:
+
+    def f(x): return x[0] * sin(x[1])
+
+Using Caddiepy the function differentiates to:
+
+    def f_diff(x1,x2,dx1,dx2): v1 = sin(x2); return ((dx1*v1) + (x1*(cos(x2)*dx2)))
+
+Most of the code for Caddiepy is adapted from the implementation of Caddie. The theory of Combinatory Automatic Differentiation is based on the paper [Combinatory Adjoints and Differentiation](https://elsman.com/pdf/msfp22.pdf) [1].  
 
 # Setup
 
