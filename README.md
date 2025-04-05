@@ -17,6 +17,8 @@ Using Caddiepy the function differentiates to:
 
 Most of the code for Caddiepy is adapted from the implementation of Caddie. The theory of Combinatory Automatic Differentiation is based on the paper [Combinatory Adjoints and Differentiation](https://elsman.com/pdf/msfp22.pdf) [1].  
 
+The project is documented in the report [Application of Combinatory Automatic Differentiation in a Python Context](https://github.com/kdsoup/caddiepy/blob/main/report.pdf).
+
 # Setup
 
 To be able to run Caddiepy, the Standard ML compiler toolkit [MLKit](https://github.com/melsman/mlkit) is required. 
